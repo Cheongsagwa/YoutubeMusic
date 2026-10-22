@@ -1,0 +1,13 @@
+# 빌드 결과물
+bin/
+obj/
+publish/
+*.user
+.vs/
+
+# 개발용 통로 (로그 · 화면 캡처 · API 응답 덤프 · 오디오 덤프)
+.dev/
+
+# 설치 파일 (build-installer.ps1 결과 — 100MB 넘어 GitHub 에 못 올라감)
+dist/
+installer/payload.zip

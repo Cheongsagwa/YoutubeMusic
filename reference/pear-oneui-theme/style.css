@@ -1,0 +1,2852 @@
+/*
+ * ┌──────────────────────────────────────────────────────────────┐
+ * │  One UI 테마 — CCBus 위젯 앱의 디자인 토큰을 그대로 옮겼다.        │
+ * │                                                              │
+ * │  · 색        ← res/values/colors.xml · values-night/colors.xml │
+ * │  · 치수/곡선 ← ui/theme/Tokens.kt · ui/oneui/OneUiComponents.kt │
+ * │                                                              │
+ * │  값을 바꾸고 싶으면 아래 "토큰" 부분만 고치면 된다.               │
+ * │  모든 규칙은 html.oneui-theme 아래에서만 걸린다.                 │
+ * └──────────────────────────────────────────────────────────────┘
+ */
+
+/* ================================================================
+ * 1. 토큰 — 모드 공통
+ * ================================================================ */
+html.oneui-theme {
+  /* Tokens.Motion: One UI 감속 곡선 + 시간 */
+  /*
+   * iOS 스타일 스프링 — 감쇠 진동 공식으로 계산한 실제 스프링 곡선 (CSS linear()).
+   *  ease   : iOS 기본 스프링 (감쇠 0.86, 응답 0.38s) — 아주 살짝 넘쳤다 자리 잡는다
+   *  smooth : 넘침 없는 임계 감쇠 — 투명도 · 색 같은 것
+   *  spring : 통통 튀는 스프링 (감쇠 0.7) — 버튼을 눌렀다 뗄 때
+   */
+  --oneui-ease: linear(0, 0.0147, 0.0531, 0.1077, 0.1726, 0.2434, 0.3165, 0.3891, 0.4594, 0.5261, 0.5882, 0.6453, 0.697, 0.7434, 0.7846, 0.8208, 0.8524, 0.8796, 0.903, 0.9228, 0.9395, 0.9534, 0.9649, 0.9743, 0.9819, 0.988, 0.9928, 0.9966, 0.9994, 1.0015, 1.0029, 1.004, 1.0046, 1.0049, 1.005, 1.005, 1.0048, 1.0045, 1.0042, 1.0038, 1);
+  --oneui-smooth: linear(0, 0.0109, 0.0394, 0.0801, 0.129, 0.1829, 0.2393, 0.2964, 0.3528, 0.4076, 0.46, 0.5095, 0.556, 0.5993, 0.6393, 0.6761, 0.7098, 0.7405, 0.7683, 0.7936, 0.8163, 0.8368, 0.8552, 0.8717, 0.8864, 0.8996, 0.9113, 0.9217, 0.931, 0.9392, 0.9465, 0.9529, 0.9586, 0.9636, 0.9681, 0.972, 0.9755, 0.9785, 0.9812, 0.9835, 1);
+  --oneui-spring: linear(0, 0.0222, 0.0797, 0.1606, 0.2553, 0.3562, 0.4572, 0.5542, 0.644, 0.7249, 0.7957, 0.8563, 0.9067, 0.9476, 0.9798, 1.0043, 1.022, 1.0341, 1.0415, 1.0452, 1.046, 1.0446, 1.0417, 1.0379, 1.0334, 1.0288, 1.0241, 1.0197, 1.0157, 1.012, 1.0089, 1.0062, 1.0039, 1.0021, 1.0007, 0.9996, 0.9989, 0.9984, 0.9981, 0.9979, 1);
+  --oneui-fast: 220ms;
+  --oneui-medium: 440ms;
+  --oneui-morph: 560ms;
+
+  /* 모서리 */
+  --oneui-radius-sheet: 32px; /* Tokens.Sheet.cornerRadius — 떠 있는 재생 바 */
+  --oneui-radius-card: 26px; /* OneUi.cardCorner — 목록 카드 */
+  --oneui-radius-popup: 28px; /* MainMenuPopup — 메뉴 · 대화상자 */
+  --oneui-radius-item: 23px; /* Tokens.Toolbar.itemCorner — 선택 칸 */
+  --oneui-radius-field: 16px; /* OneUiTextField — 입력칸 · 메뉴 줄 */
+  --oneui-radius-art: 18px; /* 앨범 아트 */
+  --oneui-radius-thumb: 10px; /* 목록 줄의 작은 썸네일 */
+  --oneui-radius-pill: 999px; /* 알약 버튼 · 칩 */
+
+  /* 간격 */
+  --oneui-float-gap: 12px; /* 떠 있는 재생 바 ↔ 창 가장자리 (OneUi.sidePadding) */
+  --oneui-seek-inset: 28px; /* 재생 바 선 ↔ 플로팅 바 양쪽 끝 (좌우 같게) */
+  --oneui-player-gap: 28px; /* 재생 화면 내용 ↔ 플로팅 바 */
+
+  /* 강조색 (app_accent) */
+  --oneui-accent: #ffffff;
+  --oneui-on-accent: #000000;
+
+  /* Tokens.Glass.blurRadius 24 */
+  --oneui-blur: blur(20px);
+
+  /* Tokens.Toolbar.pressedScale */
+  --oneui-pressed-scale: 0.9;
+
+  /*
+   * 글꼴 — 버스앱은 삼성 기기의 One UI Sans 를 쓴다.
+   * 윈도우에는 보통 없으므로 비슷한 산세리프로 차례로 내려간다.
+   * (SamsungOneUI 계열 글꼴을 설치해 두면 자동으로 그걸 쓴다)
+   */
+  --oneui-font:
+    'One UI Sans', 'SamsungOneUI', 'SamsungOne', 'Samsung Sans', 'Pretendard Variable',
+    'Pretendard', 'Segoe UI Variable Text', 'Segoe UI', 'Malgun Gothic', system-ui,
+    sans-serif;
+}
+
+/* ================================================================
+ * 2. 토큰 — 다크 (values-night/colors.xml)
+ * ================================================================ */
+html.oneui-theme.oneui-dark {
+  color-scheme: dark;
+  --oneui-bg: #17171a; /* expanded_surface */
+  --oneui-card: #252528; /* 카드 (bg 와 button 사이) */
+  --oneui-button: #3a3a3c; /* expanded_button · 떠 있는 원형 버튼 */
+  --oneui-glass: rgb(46 46 48 / 0.6); /* glass_surface #802E2E30 */
+  --oneui-glass-strong: rgb(46 46 48 / 0.86); /* 메뉴처럼 글씨가 많은 유리판 */
+  --oneui-on-surface: #ffffff; /* glass_on_surface */
+  --oneui-secondary: #a0a0a4; /* search_secondary */
+  --oneui-divider: rgb(255 255 255 / 0.12); /* divider #1FFFFFFF */
+  --oneui-selected: rgb(80 80 84 / 0.5); /* navigation_selected #505054 × 0.5 */
+  --oneui-hover: rgb(255 255 255 / 0.06);
+  --oneui-pressed: rgb(255 255 255 / 0.1);
+  --oneui-shadow: rgb(0 0 0 / 0.35); /* glass_shadow */
+  /* 유리 위에 얹는 반투명 칩 · 탭 트랙 (sesl_popup_menu_blur_background_dark #1AFFFFFF 계열) */
+  --oneui-chip: rgb(255 255 255 / 0.1);
+  /* 고른 탭 알약 */
+  --oneui-selected-strong: rgb(255 255 255 / 0.18);
+}
+
+/* ================================================================
+ * 3. 토큰 — 라이트 (values/colors.xml)
+ * ================================================================ */
+html.oneui-theme.oneui-light {
+  color-scheme: light;
+  --oneui-bg: #f3f3f5; /* expanded_surface */
+  --oneui-card: #ffffff; /* expanded_button — 흰 카드 */
+  --oneui-button: #ffffff;
+  --oneui-glass: rgb(241 241 243 / 0.6); /* glass_surface #80F1F1F3 */
+  --oneui-glass-strong: rgb(241 241 243 / 0.88);
+  --oneui-on-surface: #000000;
+  --oneui-secondary: #848487;
+  --oneui-divider: rgb(0 0 0 / 0.12); /* divider #1F000000 */
+  --oneui-selected: rgb(179 179 179 / 0.5); /* navigation_selected #B3B3B3 × 0.5 */
+  --oneui-hover: rgb(0 0 0 / 0.04);
+  --oneui-pressed: rgb(0 0 0 / 0.08);
+  --oneui-shadow: rgb(0 0 0 / 0.16);
+  --oneui-chip: rgb(0 0 0 / 0.06);
+  --oneui-selected-strong: #ffffff;
+
+  /*
+   * YouTube Music 은 다크 전용이라 글씨를 "흰색 + 투명도" 변수로 그린다.
+   * 라이트에서는 같은 변수를 "검정 + 투명도" 로 뒤집는다.
+   */
+  --ytmusic-color-white1: #000000;
+  --ytmusic-color-white1-alpha10: rgb(0 0 0 / 0.1);
+  --ytmusic-color-white1-alpha15: rgb(0 0 0 / 0.15);
+  --ytmusic-color-white1-alpha20: rgb(0 0 0 / 0.2);
+  --ytmusic-color-white1-alpha30: rgb(0 0 0 / 0.3);
+  --ytmusic-color-white1-alpha50: rgb(0 0 0 / 0.5);
+  --ytmusic-color-white1-alpha70: rgb(0 0 0 / 0.66);
+  --ytmusic-color-grey1: #6b6b6f;
+  --ytmusic-color-grey2: #848487;
+  --ytmusic-color-grey3: #a0a0a4;
+  --yt-spec-static-overlay-text-primary: #000000;
+  --yt-spec-brand-icon-inactive: #6b6b6f;
+  --yt-spec-badge-chip-background: rgb(0 0 0 / 0.06);
+  --yt-spec-touch-response: rgb(0 0 0 / 0.08);
+}
+
+/* ================================================================
+ * 4. YouTube Music 변수에 토큰 연결 (두 모드 공통)
+ * ================================================================ */
+html.oneui-theme,
+html.oneui-theme body,
+html.oneui-theme ytmusic-app {
+  --ytmusic-background: var(--oneui-bg) !important;
+  --ytmusic-color-black1: var(--oneui-bg) !important;
+  --ytmusic-color-black2: var(--oneui-card) !important;
+  --ytmusic-color-black3: var(--oneui-card) !important;
+  --ytmusic-color-black4: var(--oneui-button) !important;
+  --ytmusic-color-blackpure: var(--oneui-bg) !important;
+  --ytmusic-general-background-a: var(--oneui-bg) !important;
+  --ytmusic-general-background-b: var(--oneui-bg) !important;
+  --ytmusic-general-background-c: var(--oneui-bg) !important;
+  --ytmusic-search-background: var(--oneui-button) !important;
+  --dark-theme-background-color: var(--oneui-bg) !important;
+
+  --yt-spec-base-background: var(--oneui-bg) !important;
+  --yt-spec-general-background-a: var(--oneui-bg) !important;
+  --yt-spec-general-background-b: var(--oneui-bg) !important;
+  --yt-spec-general-background-c: var(--oneui-bg) !important;
+  --yt-spec-raised-background: var(--oneui-card) !important;
+  --yt-spec-menu-background: var(--oneui-glass-strong) !important;
+  --yt-spec-text-primary: var(--oneui-on-surface) !important;
+  --yt-spec-text-secondary: var(--oneui-secondary) !important;
+  --yt-spec-icon-active-other: var(--oneui-on-surface) !important;
+  --yt-spec-icon-inactive: var(--oneui-secondary) !important;
+  --yt-spec-10-percent-layer: var(--oneui-divider) !important;
+  --yt-spec-call-to-action: var(--oneui-accent) !important;
+  --yt-spec-themed-blue: var(--oneui-accent) !important;
+
+  --paper-dialog-background-color: var(--oneui-card) !important;
+  --paper-toast-background-color: var(--oneui-glass-strong) !important;
+  --iron-icon-fill-color: var(--oneui-on-surface);
+
+  --yt-endpoint-hover-color: var(--oneui-on-surface);
+}
+
+/* ================================================================
+ * 5. 바탕 · 글꼴 · 스크롤바
+ * ================================================================ */
+/* html 도 칠한다 — body 가 상단 메뉴 바 높이만큼 짧아서 아래로 html 배경이 비친다 */
+html.oneui-theme,
+html.oneui-theme body,
+html.oneui-theme ytmusic-app,
+html.oneui-theme ytmusic-app-layout {
+  background: var(--oneui-bg) !important;
+  color: var(--oneui-on-surface);
+}
+
+html.oneui-theme body,
+html.oneui-theme body * {
+  font-family: var(--oneui-font) !important;
+}
+
+html.oneui-theme ::-webkit-scrollbar {
+  width: 12px !important;
+  height: 12px !important;
+  background: transparent !important;
+}
+html.oneui-theme ::-webkit-scrollbar-thumb {
+  background-color: var(--oneui-divider) !important;
+  background-clip: content-box !important;
+  border: 3px solid transparent !important;
+  border-radius: var(--oneui-radius-pill) !important;
+}
+html.oneui-theme ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--oneui-secondary) !important;
+}
+html.oneui-theme ::-webkit-scrollbar-track,
+html.oneui-theme ::-webkit-scrollbar-corner {
+  background: transparent !important;
+}
+
+/* 페이지 이동 진행 막대 */
+html.oneui-theme yt-page-navigation-progress {
+  --yt-page-navigation-container-color: transparent !important;
+  --yt-page-navigation-progress-color: var(--oneui-accent) !important;
+}
+
+/*
+ * in-app-menu 플러그인은 본문 높이를 100vh - 메뉴 바(32px) 로 줄이면서 위에 붙여 두어
+ * 창 아래에 32px 빈 줄이 생긴다. 본문을 창 끝까지 늘려 여백을 없앤다.
+ * (위쪽은 원래부터 #content 의 padding-top 이 메뉴 바만큼 비켜 준다)
+ */
+html.oneui-theme ytmusic-app-layout {
+  height: 100vh !important;
+}
+
+/* ================================================================
+ * 6. 상단 바 — 유리 표면 + 알약 검색창
+ * ================================================================ */
+html.oneui-theme #nav-bar-background {
+  background: var(--oneui-glass) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  border-bottom: 0 !important;
+  transition: opacity var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme #nav-bar-divider {
+  display: none !important;
+}
+
+/* 검색창: Tokens.SearchScreen.bar — 높이 48, 반경 24 */
+html.oneui-theme ytmusic-search-box .search-box {
+  border: 0 !important;
+  border-radius: 24px !important;
+  background: var(--oneui-button) !important;
+  box-shadow: 0 4px 16px var(--oneui-shadow) !important;
+  transition:
+    border-radius var(--oneui-medium) var(--oneui-ease),
+    box-shadow var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-search-box[opened] .search-box {
+  border-radius: 24px 24px 0 0 !important;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list,
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestions-section {
+  background: var(--oneui-button) !important;
+  border: 0 !important;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list {
+  border-radius: 0 0 24px 24px !important;
+  box-shadow: 0 12px 24px var(--oneui-shadow) !important;
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-search-box input {
+  color: var(--oneui-on-surface) !important;
+  caret-color: var(--oneui-accent) !important;
+}
+html.oneui-theme ytmusic-search-box input::placeholder {
+  color: var(--oneui-secondary) !important;
+}
+
+/* ================================================================
+ * 7. 왼쪽 내비게이션 — 선택 칸은 툴바의 반투명 회색 알약
+ * ================================================================ */
+html.oneui-theme #guide-wrapper,
+html.oneui-theme #guide-content,
+html.oneui-theme #guide-spacer,
+html.oneui-theme #mini-guide,
+html.oneui-theme #mini-guide-background,
+html.oneui-theme ytmusic-guide-renderer {
+  background: var(--oneui-bg) !important;
+  border: 0 !important;
+}
+
+html.oneui-theme ytmusic-guide-entry-renderer tp-yt-paper-item {
+  border-radius: var(--oneui-radius-item) !important;
+  transition:
+    background-color var(--oneui-medium) var(--oneui-ease),
+    transform var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer tp-yt-paper-item::before {
+  border-radius: var(--oneui-radius-item) !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer tp-yt-paper-item:hover {
+  background-color: var(--oneui-hover) !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer[active] tp-yt-paper-item {
+  background-color: var(--oneui-selected) !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer[active] .title {
+  font-weight: 700 !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer tp-yt-paper-item:active {
+  transform: scale(0.96);
+  transition-duration: var(--oneui-fast) !important;
+}
+html.oneui-theme ytmusic-guide-section-renderer {
+  border-top-color: var(--oneui-divider) !important;
+}
+
+/* ================================================================
+ * 8. 하단 재생 바 — 떠 있는 유리 카드 (Tokens.Sheet / MainFloatingToolbar)
+ * ================================================================ */
+html.oneui-theme #player-bar-background {
+  background: var(--oneui-glass) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  border: 0 !important;
+}
+html.oneui-theme ytmusic-player-bar {
+  background: transparent !important;
+  border: 0 !important;
+}
+
+html.oneui-theme.oneui-floating-player #player-bar-background,
+html.oneui-theme.oneui-floating-player ytmusic-player-bar {
+  left: var(--oneui-float-gap) !important;
+  right: var(--oneui-float-gap) !important;
+  bottom: var(--oneui-float-gap) !important;
+  width: auto !important;
+  border-radius: var(--oneui-radius-sheet) !important;
+}
+html.oneui-theme.oneui-floating-player #player-bar-background {
+  box-shadow: 0 7px 32px var(--oneui-shadow) !important;
+}
+
+/* 진행 막대: 둥근 카드 모서리 밖으로 삐져나오지 않게 안쪽으로 들인다 */
+html.oneui-theme.oneui-floating-player ytmusic-player-bar #progress-bar {
+  left: var(--oneui-seek-inset) !important;
+  width: calc(100% - var(--oneui-seek-inset) * 2) !important;
+}
+/*
+ * 슬라이더 안쪽 트랙에는 왼쪽 16px 여백이 있는데 폭은 그대로라 오른쪽으로 밀려난다
+ * (시작 48px · 끝 16px 로 비대칭). 여백을 없애 트랙 = 슬라이더 폭으로 맞춘다.
+ */
+html.oneui-theme ytmusic-player-bar #progress-bar #sliderContainer {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+
+/* 재생 바 · 전체 슬라이더 강조색 (OneUiSliderRow) */
+html.oneui-theme ytmusic-player-bar #progress-bar,
+html.oneui-theme body ytmusic-player-bar #progress-bar.ytmusic-player-bar,
+html.oneui-theme tp-yt-paper-slider {
+  --paper-slider-active-color: var(--oneui-accent) !important;
+  --paper-slider-knob-color: var(--oneui-accent) !important;
+  --paper-slider-knob-start-color: var(--oneui-accent) !important;
+  --paper-slider-secondary-color: var(--oneui-selected) !important;
+  --paper-slider-container-color: var(--oneui-divider) !important;
+  --paper-progress-active-color: var(--oneui-accent) !important;
+}
+
+/* 재생 중인 곡 썸네일 */
+html.oneui-theme ytmusic-player-bar .thumbnail-image-wrapper,
+html.oneui-theme ytmusic-player-bar .image.ytmusic-player-bar,
+html.oneui-theme ytmusic-player-bar img.image {
+  border-radius: 12px !important;
+  overflow: hidden;
+}
+
+/* 재생/일시정지: 떠 있는 원형 버튼 (RoundFloatingButton) */
+html.oneui-theme ytmusic-player-bar #play-pause-button {
+  background: var(--oneui-button) !important;
+  border-radius: 50% !important;
+  box-shadow: 0 4px 14px var(--oneui-shadow) !important;
+}
+
+/* ================================================================
+ * 9. 눌림 효과 — 누르는 동안 0.9배로 줄었다가 돌아온다
+ * ================================================================ */
+html.oneui-theme tp-yt-paper-icon-button,
+html.oneui-theme yt-icon-button,
+html.oneui-theme yt-button-shape button,
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper {
+  transition:
+    transform var(--oneui-medium) var(--oneui-ease),
+    background-color var(--oneui-medium) var(--oneui-ease),
+    color var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme tp-yt-paper-icon-button:active,
+html.oneui-theme yt-icon-button:active,
+html.oneui-theme yt-button-shape button:active {
+  transform: scale(var(--oneui-pressed-scale));
+  transition-duration: var(--oneui-fast) !important;
+}
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper:active {
+  transform: scale(0.97);
+  transition-duration: var(--oneui-fast) !important;
+}
+
+/* ================================================================
+ * 10. 버튼 — 알약 모양 (OneUiButton)
+ * ================================================================ */
+html.oneui-theme yt-button-shape button,
+html.oneui-theme .yt-spec-button-shape-next,
+html.oneui-theme .ytSpecButtonShapeNextHost,
+html.oneui-theme tp-yt-paper-button {
+  border-radius: var(--oneui-radius-pill) !important;
+  font-weight: 600 !important;
+}
+/* YT 가 클래스 이름을 하이픈식 → 카멜식(ytSpecButtonShapeNext…)으로 바꿨다. 둘 다 잡는다 */
+html.oneui-theme .yt-spec-button-shape-next--filled,
+html.oneui-theme .ytSpecButtonShapeNextFilled,
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-play-button-renderer {
+  background: var(--oneui-accent) !important;
+  color: var(--oneui-on-accent) !important;
+}
+html.oneui-theme .yt-spec-button-shape-next--filled:hover,
+html.oneui-theme .ytSpecButtonShapeNextFilled:hover {
+  filter: brightness(1.08);
+}
+html.oneui-theme .yt-spec-button-shape-next--tonal,
+html.oneui-theme .ytSpecButtonShapeNextTonal {
+  background: var(--oneui-button) !important;
+  color: var(--oneui-on-surface) !important;
+}
+html.oneui-theme .yt-spec-button-shape-next--outline,
+html.oneui-theme .ytSpecButtonShapeNextOutline {
+  border-color: var(--oneui-divider) !important;
+  color: var(--oneui-on-surface) !important;
+}
+
+/* 큰 재생 버튼(ytmusic-play-button-renderer) 아이콘 · 변수 */
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-play-button-renderer {
+  --ytmusic-play-button-background-color: var(--oneui-accent) !important;
+  --ytmusic-play-button-active-background-color: var(--oneui-accent) !important;
+  --ytmusic-play-button-icon-color: var(--oneui-on-accent) !important;
+  --ytmusic-play-button-active-icon-color: var(--oneui-on-accent) !important;
+  border-radius: 50% !important;
+  color: var(--oneui-on-accent) !important;
+}
+html.oneui-theme .ytSpecButtonShapeNextFilled yt-icon,
+html.oneui-theme .ytSpecButtonShapeNextFilled .ytIconWrapperHost,
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-play-button-renderer yt-icon {
+  color: var(--oneui-on-accent) !important;
+  fill: currentColor !important;
+}
+
+/* ================================================================
+ * 11. 칩 — 고를 수 있는 알약 (OneUiChip)
+ *     바깥 틀(chip-renderer)에는 줄 간격용 투명 여백(위 40 · 아래 8)이 있어서
+ *     배경은 안쪽 .gradient-box(높이 36 의 진짜 칩)에 칠한다.
+ * ================================================================ */
+html.oneui-theme ytmusic-chip-cloud-chip-renderer {
+  border: 0 !important;
+  background: transparent !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer .gradient-box {
+  border: 0 !important;
+  border-radius: 20px !important;
+  background: var(--oneui-chip) !important;
+  overflow: hidden;
+  transition:
+    background-color var(--oneui-medium) var(--oneui-ease),
+    transform var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer a {
+  border-radius: inherit !important;
+  background: transparent !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer .text {
+  font-weight: 600 !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:hover .gradient-box {
+  background: var(--oneui-selected) !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:active .gradient-box {
+  transform: scale(var(--oneui-pressed-scale));
+  transition-duration: var(--oneui-fast) !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] .gradient-box,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected]:hover .gradient-box {
+  background: var(--oneui-accent) !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] .text,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] yt-formatted-string {
+  color: var(--oneui-on-accent) !important;
+}
+
+/* ================================================================
+ * 12. 제목 — One UI 의 큰 제목 (OneUi.largeTitle 32 Bold)
+ * ================================================================ */
+html.oneui-theme ytmusic-responsive-header-renderer .title,
+html.oneui-theme ytmusic-immersive-header-renderer .title,
+html.oneui-theme ytmusic-detail-header-renderer .title,
+html.oneui-theme ytmusic-visual-header-renderer .title,
+html.oneui-theme ytmusic-editable-playlist-detail-header-renderer .title {
+  font-size: 32px !important;
+  line-height: 1.15 !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* 묶음 제목 (OneUi.smallTitle 20~22 Bold) */
+html.oneui-theme ytmusic-carousel-shelf-basic-header-renderer .title,
+html.oneui-theme ytmusic-shelf-renderer h2.title,
+html.oneui-theme ytmusic-shelf-renderer .title.ytmusic-shelf-renderer,
+html.oneui-theme ytmusic-card-shelf-renderer .header .title {
+  font-size: 22px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* 제목 위의 작은 이름 (OneUiGroupLabel 14 SemiBold, 보조색) */
+html.oneui-theme ytmusic-carousel-shelf-basic-header-renderer .strapline,
+html.oneui-theme ytmusic-carousel-shelf-basic-header-renderer .strapline-text {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  color: var(--oneui-secondary) !important;
+  text-transform: none !important;
+  letter-spacing: 0 !important;
+}
+
+/* 부제 · 보조 글씨 */
+html.oneui-theme .subtitle.ytmusic-two-row-item-renderer,
+html.oneui-theme .secondary-flex-columns.ytmusic-responsive-list-item-renderer,
+html.oneui-theme .byline.ytmusic-player-bar {
+  color: var(--oneui-secondary) !important;
+}
+
+/* ================================================================
+ * 13. 카드 · 앨범 아트
+ * ================================================================ */
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper,
+html.oneui-theme
+  ytmusic-two-row-item-renderer
+  ytmusic-thumbnail-renderer:not([thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE']),
+html.oneui-theme
+  ytmusic-two-row-item-renderer
+  ytmusic-thumbnail-renderer:not([thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE'])
+  img {
+  border-radius: var(--oneui-radius-art) !important;
+}
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper {
+  overflow: hidden;
+}
+/* 아티스트(원형) 썸네일은 원형 그대로 */
+html.oneui-theme
+  ytmusic-two-row-item-renderer
+  ytmusic-thumbnail-renderer[thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE'],
+html.oneui-theme
+  ytmusic-two-row-item-renderer:has(
+    ytmusic-thumbnail-renderer[thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE']
+  )
+  .image-wrapper {
+  border-radius: 50% !important;
+}
+
+/* 앨범 · 재생목록 머리의 큰 커버 */
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-thumbnail-renderer,
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-thumbnail-renderer img,
+html.oneui-theme ytmusic-detail-header-renderer ytmusic-thumbnail-renderer,
+html.oneui-theme ytmusic-detail-header-renderer ytmusic-thumbnail-renderer img {
+  border-radius: var(--oneui-radius-card) !important;
+  overflow: hidden;
+}
+
+/* ================================================================
+ * 14. 목록 — 곡 줄을 둥근 카드로 묶는다 (OneUiCard + OneUiRow)
+ * ================================================================ */
+/* #contents 는 셸프 바로 아래가 아니라 div 하나를 사이에 두고 있다 */
+html.oneui-theme ytmusic-playlist-shelf-renderer #contents.ytmusic-playlist-shelf-renderer,
+html.oneui-theme ytmusic-shelf-renderer #contents.ytmusic-shelf-renderer,
+html.oneui-theme ytmusic-card-shelf-renderer .card-container,
+html.oneui-theme ytmusic-card-shelf-renderer > #contents {
+  background: var(--oneui-card) !important;
+  border-radius: var(--oneui-radius-card) !important;
+  padding: 6px !important;
+  border: 0 !important;
+}
+
+html.oneui-theme ytmusic-responsive-list-item-renderer {
+  border-radius: 20px !important;
+  border-bottom-color: var(--oneui-divider) !important;
+  transition: background-color var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-responsive-list-item-renderer:last-child {
+  border-bottom-color: transparent !important;
+}
+html.oneui-theme ytmusic-responsive-list-item-renderer:hover {
+  background-color: var(--oneui-hover) !important;
+}
+html.oneui-theme ytmusic-responsive-list-item-renderer[play-button-state='playing'],
+html.oneui-theme ytmusic-responsive-list-item-renderer[play-button-state='paused'] {
+  background-color: var(--oneui-selected) !important;
+}
+html.oneui-theme ytmusic-responsive-list-item-renderer ytmusic-thumbnail-renderer,
+html.oneui-theme ytmusic-responsive-list-item-renderer ytmusic-thumbnail-renderer img,
+html.oneui-theme ytmusic-responsive-list-item-renderer .left-items {
+  border-radius: var(--oneui-radius-thumb) !important;
+}
+html.oneui-theme
+  ytmusic-responsive-list-item-renderer
+  ytmusic-thumbnail-renderer[thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE'],
+html.oneui-theme
+  ytmusic-responsive-list-item-renderer
+  ytmusic-thumbnail-renderer[thumbnail-crop='MUSIC_THUMBNAIL_CROP_CIRCLE']
+  img {
+  border-radius: 50% !important;
+}
+
+/* ================================================================
+ * 15. 메뉴 · 대화상자 · 알림 — 유리판 (MainMenuPopup / 알람 배너)
+ * ================================================================ */
+html.oneui-theme ytmusic-menu-popup-renderer,
+html.oneui-theme ytmusic-multi-page-menu-renderer,
+html.oneui-theme tp-yt-iron-dropdown .dropdown-content {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  border: 0 !important;
+  border-radius: var(--oneui-radius-popup) !important;
+  box-shadow: 0 7px 32px var(--oneui-shadow) !important;
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox,
+html.oneui-theme ytmusic-menu-popup-renderer #items {
+  background: transparent !important;
+  padding: 8px !important;
+  border-radius: 0 !important;
+}
+html.oneui-theme ytmusic-menu-navigation-item-renderer tp-yt-paper-item,
+html.oneui-theme ytmusic-menu-service-item-renderer tp-yt-paper-item,
+html.oneui-theme ytmusic-toggle-menu-service-item-renderer tp-yt-paper-item,
+html.oneui-theme ytmusic-menu-service-item-download-renderer tp-yt-paper-item {
+  border-radius: var(--oneui-radius-field) !important;
+  transition: background-color var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-item:hover {
+  background-color: var(--oneui-hover) !important;
+}
+
+html.oneui-theme tp-yt-paper-dialog,
+html.oneui-theme ytmusic-dialog {
+  background: var(--oneui-card) !important;
+  border: 0 !important;
+  border-radius: var(--oneui-radius-popup) !important;
+  box-shadow: 0 7px 40px var(--oneui-shadow) !important;
+}
+
+/* 알림 토스트: Tokens.Alarm.banner — 반경 54 알약 */
+html.oneui-theme tp-yt-paper-toast {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  color: var(--oneui-on-surface) !important;
+  border-radius: 54px !important;
+  box-shadow: 0 7px 32px var(--oneui-shadow) !important;
+}
+
+/* 툴팁 */
+html.oneui-theme tp-yt-paper-tooltip #tooltip {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  color: var(--oneui-on-surface) !important;
+  border-radius: 12px !important;
+}
+
+/* ================================================================
+ * 16. 재생 화면 (전체 화면 플레이어)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page {
+  background: var(--oneui-bg) !important;
+}
+html.oneui-theme ytmusic-player-page #song-image,
+html.oneui-theme ytmusic-player-page #song-image img,
+html.oneui-theme ytmusic-player-page #player:not([player-ui-state='FULLSCREEN']) {
+  border-radius: var(--oneui-radius-card) !important;
+  overflow: hidden;
+}
+
+/* 오른쪽 다음 트랙 · 가사 · 관련 항목 패널 */
+html.oneui-theme ytmusic-player-page #side-panel {
+  /* 지도 위 시트처럼 유리 표면 (Tokens.Glass) */
+  background: var(--oneui-glass) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  box-shadow: 0 7px 32px var(--oneui-shadow) !important;
+  border-radius: var(--oneui-radius-sheet) !important;
+  overflow: hidden;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs {
+  --paper-tabs-selection-bar-color: var(--oneui-accent) !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab.iron-selected {
+  font-weight: 700 !important;
+}
+html.oneui-theme ytmusic-player-queue-item {
+  border-radius: var(--oneui-radius-field) !important;
+  transition: background-color var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-player-queue-item:hover {
+  background-color: var(--oneui-hover) !important;
+}
+html.oneui-theme ytmusic-player-queue-item[selected] {
+  background-color: var(--oneui-selected) !important;
+}
+html.oneui-theme ytmusic-player-queue-item .thumbnail,
+html.oneui-theme ytmusic-player-queue-item img {
+  border-radius: var(--oneui-radius-thumb) !important;
+}
+
+/* ================================================================
+ * 17. 라이트 모드 손질 — 다크 전용으로 그려진 것들
+ * ================================================================ */
+
+/* 흰 글씨 로고를 어둡게 (빨간 아이콘은 hue-rotate 로 색 유지) */
+html.oneui-theme.oneui-light ytmusic-nav-bar .left-content picture img,
+html.oneui-theme.oneui-light ytmusic-nav-bar #logo img,
+html.oneui-theme.oneui-light ytmusic-nav-bar .logo {
+  filter: invert(1) hue-rotate(180deg);
+}
+
+html.oneui-theme.oneui-light yt-icon,
+html.oneui-theme.oneui-light tp-yt-iron-icon {
+  color: var(--oneui-on-surface);
+  fill: currentColor;
+}
+
+/* 썸네일 위에 얹힌 재생 버튼 · 시간 글씨는 사진 위라 흰색 유지 */
+html.oneui-theme.oneui-light ytmusic-play-button-renderer,
+html.oneui-theme.oneui-light ytmusic-play-button-renderer yt-icon,
+html.oneui-theme.oneui-light ytmusic-thumbnail-overlay-time-status-renderer {
+  --ytmusic-color-white1: #ffffff;
+  color: #ffffff;
+}
+
+/* 칩 글씨 — STYLE_LARGE_TRANSLUCENT… 칩은 글씨를 흰색으로 고정해 둔다 */
+html.oneui-theme.oneui-light
+  ytmusic-chip-cloud-chip-renderer:not([is-selected])
+  .text,
+html.oneui-theme.oneui-light
+  ytmusic-chip-cloud-chip-renderer:not([is-selected])
+  yt-formatted-string {
+  color: var(--oneui-on-surface) !important;
+}
+
+/* 묶음 제목 위 작은 이름 · 부제 */
+html.oneui-theme.oneui-light ytmusic-carousel-shelf-basic-header-renderer [class*='strapline'],
+html.oneui-theme.oneui-light ytmusic-carousel-shelf-basic-header-renderer [class*='strapline'] * {
+  color: var(--oneui-secondary) !important;
+}
+
+/*
+ * 앨범 색 테마(album-color-theme)가 흰색 50% 로 고정해 둔 글씨 · 아이콘.
+ * 그 플러그인보다 구체적인 선택자로 덮는다.
+ */
+html.oneui-theme.oneui-light body ytmusic-player-bar .time-info.ytmusic-player-bar,
+html.oneui-theme.oneui-light body ytmusic-player-bar.ytmusic-app,
+html.oneui-theme.oneui-light body ytmusic-player-bar {
+  color: var(--oneui-secondary) !important;
+}
+html.oneui-theme.oneui-light body ytmusic-player-bar .menu.ytmusic-player-bar {
+  --iron-icon-fill-color: var(--oneui-on-surface) !important;
+}
+html.oneui-theme.oneui-light body ytmusic-player-bar .title.ytmusic-player-bar {
+  color: var(--oneui-on-surface) !important;
+}
+html.oneui-theme.oneui-light body .duration.ytmusic-player-queue-item,
+html.oneui-theme.oneui-light body .byline.ytmusic-player-queue-item {
+  color: var(--oneui-secondary) !important;
+  --yt-endpoint-color: var(--oneui-secondary) !important;
+  --yt-endpoint-hover-color: var(--oneui-on-surface) !important;
+  --yt-endpoint-visited-color: var(--oneui-secondary) !important;
+}
+html.oneui-theme.oneui-light body .icon.ytmusic-menu-navigation-item-renderer {
+  color: var(--oneui-on-surface) !important;
+}
+html.oneui-theme.oneui-light body .volume-slider.ytmusic-player-bar,
+html.oneui-theme.oneui-light body .expand-volume-slider.ytmusic-player-bar {
+  --paper-slider-container-color: var(--oneui-divider) !important;
+}
+
+/* ================================================================
+ * 18. 여백 맞추기
+ * ================================================================ */
+
+/* 재생 화면이 떠 있는 재생 바 밑으로 파고들지 않게 — 바 위 간격까지 빼고 높이를 잡는다 */
+html.oneui-theme.oneui-floating-player ytmusic-app-layout > [slot='player-page'] {
+  height: calc(
+    100vh - var(--menu-bar-height, 0px) - var(--ytmusic-nav-bar-height) -
+      var(--ytmusic-player-bar-height) - var(--oneui-float-gap) * 2
+  ) !important;
+}
+
+/* 패널 안 '재생 중인 트랙 출처' 머리글을 아래 곡 줄과 같은 시작선에 */
+/*
+ * 재생 화면 오른쪽 패널: 스크롤 영역(#tab-renderer)이 왼쪽에 붙어 있어 모든 탭(다음 트랙 · 가사 · 댓글 · 관련)의
+ * 왼쪽 여백이 0 이다. 오른쪽에는 스크롤바 자리 12px 이 있으므로 왼쪽도 12px 을 준다.
+ */
+html.oneui-theme ytmusic-player-page #side-panel #tab-renderer {
+  padding-left: 12px !important;
+  box-sizing: border-box !important;
+}
+
+/* 미니 메뉴 첫 칸이 상단 바에 가리지 않게 한 칸 내린다 */
+html.oneui-theme #mini-guide-spacer {
+  padding-bottom: 16px !important;
+}
+
+/* ================================================================
+ * 19. 파형 재생 바 (wave.ts 가 그리는 캔버스)
+ *     원래 막대는 투명하게 두어 클릭 · 드래그만 맡기고, 손잡이만 앨범 색으로 남긴다
+ * ================================================================ */
+html.oneui-theme.oneui-wave body ytmusic-player-bar #progress-bar.ytmusic-player-bar {
+  --paper-slider-active-color: transparent !important;
+  --paper-slider-secondary-color: transparent !important;
+  --paper-slider-container-color: transparent !important;
+  --paper-progress-active-color: transparent !important;
+  --paper-slider-knob-color: var(--oneui-wave-color, var(--oneui-accent)) !important;
+  --paper-slider-knob-start-color: var(--oneui-wave-color, var(--oneui-accent)) !important;
+  --paper-slider-knob-start-border-color: var(--oneui-wave-color, var(--oneui-accent)) !important;
+}
+/* 손잡이는 캔버스가 부드럽게 그린다 — YT 손잡이는 투명하게 (잡기 · 드래그는 그대로 동작) */
+html.oneui-theme.oneui-wave ytmusic-player-bar #progress-bar #sliderKnob,
+html.oneui-theme.oneui-wave ytmusic-player-bar #progress-bar .slider-knob {
+  opacity: 0 !important;
+}
+html.oneui-theme ytmusic-player-bar > canvas.oneui-wave-canvas {
+  position: absolute;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ================================================================
+ * 20. 재생 화면 탭 — One UI 알약 탭 (SeslTabLayout 서브탭 모양)
+ *     둥근 트랙 안에서 고른 탭만 알약으로 채워지고 Bold
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs.tab-header-container {
+  margin: 12px 12px 4px !important;
+  height: 44px !important;
+  padding: 4px !important;
+  box-sizing: border-box !important;
+  border-radius: var(--oneui-radius-pill) !important;
+  background: var(--oneui-chip) !important;
+  border: 0 !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs #tabsContainer,
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs #tabsContent {
+  height: 100% !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs #selectionBar {
+  display: none !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab.tab-header {
+  height: 100% !important;
+  border-radius: var(--oneui-radius-pill) !important;
+  color: var(--oneui-secondary) !important;
+  font-weight: 600 !important;
+  transition:
+    background-color var(--oneui-medium) var(--oneui-ease),
+    color var(--oneui-medium) var(--oneui-ease),
+    transform var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab.tab-header:hover {
+  color: var(--oneui-on-surface) !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab.tab-header.iron-selected {
+  background: var(--oneui-selected-strong) !important;
+  color: var(--oneui-on-surface) !important;
+  font-weight: 700 !important;
+  box-shadow: 0 2px 8px var(--oneui-shadow) !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab.tab-header:active {
+  transform: scale(0.95);
+  transition-duration: var(--oneui-fast) !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-tab[disabled] {
+  opacity: 0.35 !important;
+}
+
+/* ================================================================
+ * 21. 실시간 가사 (synced-lyrics 플러그인) — One UI 스타일
+ *     지나간 줄 · 다가올 줄은 흐리게, 지금 줄은 크고 또렷하게 + 앨범 색 빛
+ * ================================================================ */
+html.oneui-theme {
+  --lyrics-font-family: var(--oneui-font) !important;
+  --lyrics-font-size: 22px !important;
+  --lyrics-line-height: 1.3 !important;
+  --global-margin: 4px !important;
+  --lyrics-inactive-font-weight: 700 !important;
+  --lyrics-inactive-opacity: 0.3 !important;
+  --lyrics-inactive-scale: 0.96 !important;
+  --lyrics-active-font-weight: 800 !important;
+  --lyrics-active-opacity: 1 !important;
+  --lyrics-active-scale: 1 !important;
+  --lyrics-scale-duration: var(--oneui-medium) !important;
+  --lyrics-opacity-transition: var(--oneui-medium) !important;
+  --glow-color: color-mix(in srgb, var(--oneui-wave-color, var(--oneui-accent)) 70%, transparent) !important;
+}
+html.oneui-theme #synced-lyrics-container .synced-line .text-lyrics {
+  padding-left: 4px !important;
+  transition:
+    scale var(--oneui-medium) var(--oneui-ease),
+    translate var(--oneui-medium) var(--oneui-ease),
+    opacity var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme #synced-lyrics-container .synced-lyrics {
+  margin-right: 8px !important;
+}
+html.oneui-theme #synced-lyrics-container .synced-line {
+  border-radius: var(--oneui-radius-field);
+  transition: background-color var(--oneui-medium) var(--oneui-ease);
+}
+html.oneui-theme #synced-lyrics-container .synced-line:hover {
+  background-color: var(--oneui-hover);
+}
+/* 가사 출처 고르기 카드 */
+html.oneui-theme #synced-lyrics-container .lyrics-picker {
+  background: var(--oneui-chip) !important;
+  border-radius: var(--oneui-radius-field) !important;
+  border: 0 !important;
+}
+
+/* ================================================================
+ * 22. 디자인 정리 — 앨범 색 배경 · 유리(블러) · Bold · 일관성
+ *     (같은 선택자를 뒤에 다시 써서 앞 규칙을 덮는다)
+ * ================================================================ */
+
+/* 앨범 색이 곡마다 부드럽게 바뀌도록 색 변수로 등록 */
+@property --oneui-album {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: #8e8e93;
+}
+html.oneui-theme {
+  transition: --oneui-album 900ms var(--oneui-ease);
+  /* 앨범 색을 옅게 깐 배경 — 유리 표면 뒤로 비친다 */
+  --oneui-album-wash:
+    radial-gradient(
+      1100px 720px at 88% -12%,
+      color-mix(in srgb, var(--oneui-album) 58%, transparent),
+      transparent 70%
+    ),
+    radial-gradient(
+      900px 640px at -8% 108%,
+      color-mix(in srgb, var(--oneui-album) 36%, transparent),
+      transparent 70%
+    );
+}
+html.oneui-theme.oneui-dark {
+  /* 유리 위 목록 카드 · 버튼 (반투명) */
+  --oneui-card-glass: rgb(255 255 255 / 0.055);
+  --oneui-button-glass: rgb(255 255 255 / 0.12);
+  --oneui-glass: rgb(36 36 40 / 0.55);
+  --oneui-glass-strong: rgb(40 40 44 / 0.78);
+}
+
+/* 배경: 맨 아래(ytmusic-app-layout)에만 앨범 색을 깔고 위 껍데기들은 투명하게 */
+html.oneui-theme,
+html.oneui-theme body {
+  background: var(--oneui-bg) !important;
+}
+/*
+ * 앨범 색 배경은 스크롤하지 않는 ytmusic-app 에 깐다.
+ * (스크롤 상자에 background-attachment: fixed 를 쓰면 스크롤할 때마다 배경 전체를 다시 그려 렉이 걸린다)
+ */
+html.oneui-theme ytmusic-app {
+  background: var(--oneui-album-wash), var(--oneui-bg) !important;
+}
+html.oneui-theme ytmusic-app-layout {
+  background: transparent !important;
+}
+/* 사이드바도 투명 — 같은 앨범 색 배경 위에 떠 있게 */
+html.oneui-theme #guide-wrapper,
+html.oneui-theme #guide-content,
+html.oneui-theme #guide-spacer,
+html.oneui-theme #mini-guide,
+html.oneui-theme #mini-guide-background,
+html.oneui-theme ytmusic-guide-renderer {
+  background: transparent !important;
+}
+
+/* 상단: 메뉴 바(in-app-menu) + 탐색 바를 한 장의 유리로 */
+html.oneui-theme nav#ytmd-title-bar-main-panel {
+  background: transparent !important;
+}
+html.oneui-theme #nav-bar-background {
+  top: 0 !important;
+  height: calc(var(--ytmusic-nav-bar-height, 90px) + var(--menu-bar-height, 0px)) !important;
+  background: var(--oneui-glass) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+}
+
+/* 사이드바 첫 칸이 상단 바에 가리지 않게 — 상단 바(메뉴 바 + 탐색 바) 바로 아래에서 시작 */
+html.oneui-theme #mini-guide-spacer,
+html.oneui-theme #guide-spacer {
+  margin-top: calc(var(--ytmusic-nav-bar-height, 90px) + var(--menu-bar-height, 0px)) !important;
+  height: 0 !important;
+  padding-bottom: 8px !important;
+}
+
+/* 검색창: 그림자(검은 테두리처럼 보이던 것) 없애고 유리 알약으로 */
+html.oneui-theme ytmusic-search-box .search-box {
+  background: var(--oneui-button-glass) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  box-shadow: none !important;
+  border: 0 !important;
+  outline: 0 !important;
+}
+html.oneui-theme ytmusic-search-box[opened] .search-box,
+html.oneui-theme ytmusic-search-box #suggestion-list {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list {
+  box-shadow: 0 16px 32px var(--oneui-shadow) !important;
+}
+
+/* 목록 카드 · 재생 화면 · 버튼: 반투명 유리로 통일 */
+html.oneui-theme ytmusic-playlist-shelf-renderer #contents.ytmusic-playlist-shelf-renderer,
+html.oneui-theme ytmusic-shelf-renderer #contents.ytmusic-shelf-renderer,
+html.oneui-theme ytmusic-card-shelf-renderer .card-container,
+html.oneui-theme ytmusic-card-shelf-renderer > #contents {
+  background: var(--oneui-card-glass) !important;
+}
+html.oneui-theme .yt-spec-button-shape-next--tonal,
+html.oneui-theme .ytSpecButtonShapeNextTonal,
+html.oneui-theme ytmusic-responsive-header-renderer .ytSpecButtonShapeNextHost:not(.ytSpecButtonShapeNextFilled) {
+  background: var(--oneui-button-glass) !important;
+}
+html.oneui-theme ytmusic-player-bar #play-pause-button {
+  background: var(--oneui-button-glass) !important;
+  box-shadow: none !important;
+}
+/* 재생 화면: 앨범 색을 더 진하게 */
+html.oneui-theme ytmusic-player-page {
+  background:
+    radial-gradient(
+      900px 700px at 30% 45%,
+      color-mix(in srgb, var(--oneui-album) 50%, transparent),
+      transparent 70%
+    ),
+    var(--oneui-album-wash),
+    var(--oneui-bg) !important;
+}
+
+/* ---------- Bold: 중요한 글씨 ---------- */
+html.oneui-theme ytmusic-responsive-list-item-renderer .title,
+html.oneui-theme ytmusic-player-queue-item .song-title,
+html.oneui-theme ytmusic-two-row-item-renderer .title,
+html.oneui-theme ytmusic-player-bar .title.ytmusic-player-bar {
+  font-weight: 700 !important;
+}
+html.oneui-theme ytmusic-carousel-shelf-basic-header-renderer .title,
+html.oneui-theme ytmusic-shelf-renderer h2.title,
+html.oneui-theme ytmusic-card-shelf-renderer .header .title {
+  font-weight: 800 !important;
+}
+html.oneui-theme ytmusic-responsive-header-renderer .title,
+html.oneui-theme ytmusic-detail-header-renderer .title {
+  font-weight: 800 !important;
+}
+html.oneui-theme ytmusic-queue-header-renderer .container-name,
+html.oneui-theme ytmusic-queue-header-renderer .container-name * {
+  font-weight: 700 !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer .title {
+  font-weight: 600 !important;
+}
+html.oneui-theme ytmusic-guide-entry-renderer[active] .title {
+  font-weight: 800 !important;
+}
+
+/* ================================================================
+ * 23. One UI 아이콘 (icons.ts 가 아이콘 칸에 --oneui-ic 를 넣는다)
+ *     원래 svg 는 숨기고, 같은 칸에 마스크로 그려 색은 글자색을 따라간다
+ * ================================================================ */
+html.oneui-theme [data-oneui-icon] {
+  -webkit-mask: var(--oneui-ic) center / var(--oneui-ic-size, 24px) no-repeat !important;
+  mask: var(--oneui-ic) center / var(--oneui-ic-size, 24px) no-repeat !important;
+  background-color: currentColor !important;
+}
+html.oneui-theme [data-oneui-icon] > * {
+  visibility: hidden !important;
+}
+
+/* ================================================================
+ * 24. 재생 바 아이콘 줄 — 양 끝 아이콘을 재생 바 선의 시작 · 끝에 맞춘다
+ *     (재생 바 선: 플로팅 바 양쪽 28px 안쪽. 원래 아이콘은 왼쪽 14px · 오른쪽 18px 더 바깥)
+ * ================================================================ */
+html.oneui-theme.oneui-floating-player ytmusic-player-bar .left-controls {
+  margin-left: 14px !important;
+}
+html.oneui-theme.oneui-floating-player ytmusic-player-bar .right-controls {
+  margin-right: 22px !important;
+}
+
+/* hover · 눌림 효과가 사각형으로 보이던 것: 옛 버튼 안의 yt-interaction 층이 모서리 0 이었다 */
+html.oneui-theme ytmusic-player-bar yt-icon-button,
+html.oneui-theme ytmusic-player-bar yt-icon-button #button,
+html.oneui-theme ytmusic-player-bar yt-icon-button yt-interaction,
+html.oneui-theme ytmusic-player-bar yt-icon-button yt-interaction *,
+html.oneui-theme ytmusic-player-bar tp-yt-paper-icon-button,
+html.oneui-theme ytmusic-player-bar tp-yt-paper-ripple {
+  border-radius: 50% !important;
+}
+html.oneui-theme ytmusic-player-bar yt-icon-button {
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-player-bar yt-icon-button:hover {
+  background-color: var(--oneui-hover) !important;
+}
+
+/* ================================================================
+ * 25. 재생 화면 — 상단 바 · 검색창 · 계정 · 사이드바를 숨기고 창 전체를 쓴다
+ * ================================================================ */
+html.oneui-theme ytmusic-app-layout > [slot='nav-bar'],
+html.oneui-theme #nav-bar-background,
+html.oneui-theme #mini-guide,
+html.oneui-theme #mini-guide-background,
+html.oneui-theme #guide-wrapper {
+  transition:
+    opacity var(--oneui-medium) var(--oneui-ease),
+    transform var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-app-layout[player-page-open] > [slot='nav-bar'],
+html.oneui-theme ytmusic-app-layout[player-page-open] #nav-bar-background {
+  opacity: 0 !important;
+  transform: translateY(-16px) !important;
+  pointer-events: none !important;
+}
+html.oneui-theme ytmusic-app[player-page-open] #mini-guide,
+html.oneui-theme ytmusic-app:has(ytmusic-app-layout[player-page-open]) #mini-guide,
+html.oneui-theme ytmusic-app:has(ytmusic-app-layout[player-page-open]) #guide-wrapper,
+html.oneui-theme ytmusic-app-layout[player-page-open] #mini-guide-background {
+  opacity: 0 !important;
+  transform: translateX(-16px) !important;
+  pointer-events: none !important;
+}
+/*
+ * 재생 화면 자리: 배경은 창 전체(메뉴 바 · 플로팅 바 뒤까지)를 덮어 사각형 경계가 생기지 않게 하고,
+ * 내용만 메뉴 바 아래 ~ 플로팅 바 위(+ 여유 간격)로 들인다.
+ * album-color-theme 의 margin-top · padding-top(:not 이 겹친 강한 선택자)보다 구체적으로 쓴다.
+ */
+html.oneui-theme body ytmusic-app ytmusic-app-layout#layout > ytmusic-player-page[slot='player-page'][slot] {
+  left: 0 !important;
+  width: 100vw !important;
+  top: 0 !important;
+  margin-top: 0 !important;
+  height: 100vh !important;
+  box-sizing: border-box !important;
+  padding-top: calc(var(--menu-bar-height, 0px) + 8px) !important;
+  padding-bottom: calc(
+    var(--ytmusic-player-bar-height) + var(--oneui-float-gap) + var(--oneui-player-gap)
+  ) !important;
+}
+html.oneui-theme ytmusic-player-page {
+  transition:
+    transform var(--oneui-morph) var(--oneui-ease),
+    background-color var(--oneui-medium) var(--oneui-ease) !important;
+}
+
+/* ================================================================
+ * 26. 애니메이션 — 앱 전체를 iOS 스타일 비선형 곡선으로
+ *     (딱딱한 기본 곡선 대신 빠르게 출발해 길게 감속, 버튼은 손을 떼면 살짝 튕김)
+ * ================================================================ */
+/* (모든 요소에 걸던 전환 곡선 규칙은 성능 때문에 뺐다 — 요소 1만 개마다 스타일 계산이 붙었다.
+   대신 실제로 움직이는 YT 요소들만 아래에서 곡선을 준다) */
+html.oneui-theme tp-yt-paper-icon-button,
+html.oneui-theme yt-icon-button,
+html.oneui-theme yt-button-shape button,
+html.oneui-theme ytmusic-guide-entry-renderer tp-yt-paper-item,
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper img {
+  transition-timing-function: var(--oneui-ease) !important;
+}
+/* 기본 전환이 너무 짧게 박힌 YT 요소들(0.1~0.2s)도 스프링이 보이도록 최소 길이를 준다 */
+html.oneui-theme body ytmusic-player-page,
+html.oneui-theme body #nav-bar-background,
+html.oneui-theme body ytmusic-search-box .search-box,
+html.oneui-theme body tp-yt-iron-dropdown,
+html.oneui-theme body ytmusic-menu-popup-renderer {
+  transition-duration: var(--oneui-medium) !important;
+}
+/* 눌렀다 떼면 스프링으로 돌아온다 (누르는 동안은 빠른 감속) */
+html.oneui-theme body tp-yt-paper-icon-button,
+html.oneui-theme body yt-icon-button,
+html.oneui-theme body yt-button-shape button,
+html.oneui-theme body ytmusic-chip-cloud-chip-renderer .gradient-box,
+html.oneui-theme body ytmusic-player-page tp-yt-paper-tab.tab-header,
+html.oneui-theme body ytmusic-guide-entry-renderer tp-yt-paper-item,
+html.oneui-theme body ytmusic-two-row-item-renderer .image-wrapper {
+  transition:
+    transform 600ms var(--oneui-spring),
+    background-color var(--oneui-medium) var(--oneui-smooth),
+    color var(--oneui-medium) var(--oneui-smooth),
+    box-shadow var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme body tp-yt-paper-icon-button:active,
+html.oneui-theme body yt-icon-button:active,
+html.oneui-theme body yt-button-shape button:active,
+html.oneui-theme body ytmusic-chip-cloud-chip-renderer:active .gradient-box,
+html.oneui-theme body ytmusic-player-page tp-yt-paper-tab.tab-header:active,
+html.oneui-theme body ytmusic-guide-entry-renderer tp-yt-paper-item:active {
+  transform: scale(var(--oneui-pressed-scale));
+  transition:
+    transform var(--oneui-fast) var(--oneui-smooth),
+    background-color var(--oneui-fast) var(--oneui-smooth) !important;
+}
+
+/* ================================================================
+ * 27. 펼치기 버튼 — YT 가 버튼을 180° 돌릴 때 부드럽게 회전
+ * ================================================================ */
+html.oneui-theme body ytmusic-player-bar .toggle-player-page-button {
+  transition:
+    transform var(--oneui-morph) var(--oneui-ease),
+    background-color var(--oneui-medium) var(--oneui-ease) !important;
+}
+
+/* ================================================================
+ * 28. 재생 버튼 — 흰 원 + 검은 아이콘
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar #play-pause-button {
+  background: #ffffff !important;
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.3) !important;
+}
+html.oneui-theme ytmusic-player-bar #play-pause-button yt-icon {
+  color: #000000 !important;
+}
+html.oneui-theme ytmusic-player-bar #play-pause-button:hover {
+  background: #ffffff !important;
+  filter: brightness(0.92);
+}
+
+/* ================================================================
+ * 29. 노래 / 동영상 전환 — 헤드폰 · 영상 아이콘 알약 (YT 앱 스타일)
+ * ================================================================ */
+html.oneui-theme ytmusic-av-toggle .av-toggle {
+  background: var(--oneui-chip) !important;
+  border-radius: var(--oneui-radius-pill) !important;
+  padding: 4px !important;
+  height: auto !important;
+  gap: 2px;
+  border: 0 !important;
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle button {
+  width: 64px !important;
+  min-width: 64px !important;
+  height: 40px !important;
+  padding: 0 !important;
+  font-size: 0 !important;
+  color: var(--oneui-secondary) !important;
+  border-radius: var(--oneui-radius-pill) !important;
+  background: transparent !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle button::before {
+  content: '';
+  width: 24px;
+  height: 24px;
+  background-color: currentColor;
+  -webkit-mask: var(--oneui-ic-headphones) center / 24px no-repeat;
+  mask: var(--oneui-ic-headphones) center / 24px no-repeat;
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle .video-button::before {
+  -webkit-mask-image: var(--oneui-ic-video);
+  mask-image: var(--oneui-ic-video);
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle button[aria-pressed='true'] {
+  background: var(--oneui-selected-strong) !important;
+  color: var(--oneui-on-surface) !important;
+  box-shadow: 0 2px 8px var(--oneui-shadow) !important;
+}
+
+/* ================================================================
+ * 30. 앨범아트 위 어둡게 하는 층(전체화면 · PiP 버튼 뒤) — 앨범아트와 같은 둥근 모양으로
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page #player:not([player-ui-state='FULLSCREEN']) {
+  overflow: hidden !important;
+  isolation: isolate;
+}
+html.oneui-theme ytmusic-player-page #player:not([player-ui-state='FULLSCREEN']) #song-media-window {
+  border-radius: var(--oneui-radius-card) !important;
+  overflow: hidden !important;
+}
+
+/* ================================================================
+ * 31. 볼륨 슬라이더 — One UI 슬라이더 (굵은 둥근 막대 + 흰 손잡이, 유리 알약 위)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar #volume-slider,
+html.oneui-theme ytmusic-player-bar #expand-volume-slider {
+  --paper-slider-height: 6px !important;
+  --paper-slider-active-color: #ffffff !important;
+  --paper-slider-secondary-color: transparent !important;
+  --paper-slider-container-color: rgb(255 255 255 / 0.18) !important;
+  --paper-slider-knob-color: #ffffff !important;
+  --paper-slider-knob-start-color: #ffffff !important;
+  --paper-slider-knob-start-border-color: #ffffff !important;
+  --paper-slider-pin-color: #ffffff !important;
+  border-radius: var(--oneui-radius-pill) !important;
+  background: var(--oneui-chip) !important;
+  height: 32px !important;
+  padding: 0 4px !important;
+  box-sizing: border-box !important;
+}
+html.oneui-theme ytmusic-player-bar #volume-slider #progressContainer,
+html.oneui-theme ytmusic-player-bar #volume-slider #primaryProgress,
+html.oneui-theme ytmusic-player-bar #expand-volume-slider #progressContainer,
+html.oneui-theme ytmusic-player-bar #expand-volume-slider #primaryProgress {
+  border-radius: var(--oneui-radius-pill) !important;
+}
+html.oneui-theme ytmusic-player-bar #volume-slider .slider-knob-inner,
+html.oneui-theme ytmusic-player-bar #expand-volume-slider .slider-knob-inner {
+  border: 0 !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 6px rgb(0 0 0 / 0.35) !important;
+  transform: scale(1.1);
+}
+
+/* ================================================================
+ * 32. 성능 — 블러 표면은 각자 GPU 레이어로 (스크롤할 때 뒤만 다시 합성)
+ * ================================================================ */
+html.oneui-theme #nav-bar-background,
+html.oneui-theme #player-bar-background {
+  will-change: transform;
+  transform: translateZ(0);
+}
+html.oneui-theme ytmusic-app-layout[player-page-open] > [slot='nav-bar'],
+html.oneui-theme ytmusic-app-layout[player-page-open] #nav-bar-background {
+  transform: translateY(-16px) translateZ(0) !important;
+}
+
+/* 보조 글씨는 One UI 보조색으로 고정 (다른 플러그인이 켜지고 꺼져도 같게) */
+html.oneui-theme ytmusic-player-bar .time-info.ytmusic-player-bar,
+html.oneui-theme ytmusic-player-queue-item .byline,
+html.oneui-theme ytmusic-player-queue-item .duration {
+  color: var(--oneui-secondary) !important;
+  --yt-endpoint-color: var(--oneui-secondary) !important;
+  --yt-endpoint-visited-color: var(--oneui-secondary) !important;
+}
+
+/* ================================================================
+ * 33. 홈 바탕 — YT 자체의 어두운 그라데이션 층을 걷어 앨범 색 배경이 보이게
+ *     (앨범 색 테마 플러그인이 하던 일. 아티스트 사진 배경은 아래로 갈수록 투명하게)
+ * ================================================================ */
+html.oneui-theme ytmusic-browse-response .background-gradient {
+  background: none !important;
+}
+html.oneui-theme ytmusic-browse-response #background.immersive-background {
+  opacity: 0.55 !important;
+}
+html.oneui-theme ytmusic-browse-response ytmusic-fullbleed-thumbnail-renderer img {
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+  mask-image: linear-gradient(to bottom, #000 0%, #000 35%, transparent 100%);
+}
+
+/* ================================================================
+ * 34. '다시 듣기' — 2행 그리드 (가로로 넘기는 건 그대로)
+ * ================================================================ */
+html.oneui-theme ytmusic-carousel-shelf-renderer.oneui-two-rows #items.ytmusic-carousel {
+  grid-template-rows: repeat(2, auto) !important;
+  grid-auto-flow: column !important;
+  row-gap: 20px !important;
+}
+
+/* ================================================================
+ * 35. 검색창 — 열리면 검색창과 추천 목록이 한 장의 둥근 유리 카드가 된다
+ *     (바깥 상자의 모서리 2px 사각 그림자 때문에 더 큰 창처럼 보이던 것을 없앤다)
+ * ================================================================ */
+html.oneui-theme ytmusic-search-box .search-container {
+  box-shadow: none !important;
+  border-radius: 24px !important;
+  background: transparent !important;
+}
+/* 추천 목록은 바깥 상자 밖에 따로 떠 있다 → 검색창(위 반) + 추천 목록(아래 반)을 이어 붙인 유리 카드로 */
+html.oneui-theme ytmusic-search-box[opened] .search-box {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  border-radius: 24px 24px 0 0 !important;
+  box-shadow: none !important;
+}
+html.oneui-theme ytmusic-search-box[opened] #suggestion-list {
+  background: var(--oneui-glass-strong) !important;
+  backdrop-filter: var(--oneui-blur) !important;
+  border-radius: 0 0 24px 24px !important;
+  box-shadow: 0 20px 40px var(--oneui-shadow) !important;
+  border: 0 !important;
+  overflow: hidden !important;
+}
+/* 추천이 아직 없을 땐 위 반만 남으니 다시 알약으로 */
+html.oneui-theme ytmusic-search-box[opened]:not(:has(ytmusic-search-suggestion)) .search-box {
+  border-radius: 24px !important;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list ytmusic-search-suggestions-section {
+  background: transparent !important;
+  border: 0 !important;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list {
+  padding-bottom: 6px !important;
+}
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestion,
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestions-section > * {
+  border-radius: var(--oneui-radius-field) !important;
+  margin: 0 6px !important;
+}
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestion:hover,
+html.oneui-theme ytmusic-search-box [selected] {
+  background: var(--oneui-hover) !important;
+}
+
+/* ================================================================
+ * 36. 글자 끌어서 선택 막기 — 앱처럼 (입력칸 · 가사 · 댓글은 선택 가능)
+ * ================================================================ */
+html.oneui-theme body {
+  -webkit-user-select: none !important;
+  user-select: none !important;
+}
+html.oneui-theme input,
+html.oneui-theme textarea,
+html.oneui-theme [contenteditable='true'],
+html.oneui-theme #synced-lyrics-container .text-lyrics,
+html.oneui-theme ytmusic-description-shelf-renderer,
+html.oneui-theme ytd-comment-renderer #content-text,
+html.oneui-theme ytmusic-comment-renderer #content-text {
+  -webkit-user-select: text !important;
+  user-select: text !important;
+}
+html.oneui-theme img,
+html.oneui-theme a {
+  -webkit-user-drag: none;
+}
+
+/* ================================================================
+ * 37. 재생 버튼 로딩 — 같은 흰 원 안에 검은 로딩 아이콘
+ *     로딩 아이콘은 재생 버튼 다음 자리의 별도 요소라, 로딩 중엔 재생 버튼을 숨기고 그 자리에 둔다
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .spinner-container {
+  display: none !important;
+}
+html.oneui-theme ytmusic-player-bar #play-pause-button {
+  display: inline-flex !important;
+}
+
+/* ================================================================
+ * 38. 칩 글씨 — 흰 칩용으로 검게 박힌 글씨(저장 버튼 등)를 유리 칩에 맞게
+ * ================================================================ */
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:not([is-selected]) .text,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:not([is-selected]) yt-formatted-string,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:not([is-selected]) yt-icon {
+  color: var(--oneui-on-surface) !important;
+  fill: currentColor !important;
+}
+html.oneui-theme ytmusic-chip-cloud-chip-renderer:not([is-selected]) yt-icon path {
+  fill: currentColor !important;
+}
+
+/* ================================================================
+ * 39. 사이드바 펼치기 — 미끄러지며 나타나고 사라진다
+ *     YT 는 visibility 만 바꿔 뚝 끊긴다 → 사라질 때 visibility 를 애니메이션 끝까지 늦춘다
+ * ================================================================ */
+html.oneui-theme ytmusic-app #guide-wrapper {
+  transition:
+    transform var(--oneui-medium) var(--oneui-ease),
+    opacity var(--oneui-medium) var(--oneui-smooth),
+    visibility 0s linear 0s !important;
+  transform: translateX(0);
+  opacity: 1;
+}
+html.oneui-theme ytmusic-app[guide-collapsed] #guide-wrapper {
+  transform: translateX(-40px) !important;
+  opacity: 0 !important;
+  transition:
+    transform var(--oneui-medium) var(--oneui-ease),
+    opacity var(--oneui-fast) var(--oneui-smooth),
+    visibility 0s linear var(--oneui-medium) !important;
+}
+html.oneui-theme ytmusic-app #mini-guide {
+  animation: oneui-fade-in var(--oneui-medium) var(--oneui-smooth);
+}
+html.oneui-theme ytmusic-nav-bar .left-content {
+  transition: width var(--oneui-medium) var(--oneui-ease) !important;
+}
+
+/* ================================================================
+ * 40. 애니메이션 더하기 — 나타나는 것 · 떠오르는 것 · 바뀌는 것 모두
+ * ================================================================ */
+@keyframes oneui-fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes oneui-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oneui-pop {
+  from { opacity: 0; transform: scale(0.92); }
+  to { opacity: 1; transform: none; }
+}
+@keyframes oneui-drop {
+  from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+  to { opacity: 1; transform: none; }
+}
+/* 페이지 이동 · 새 셸프가 붙을 때 아래에서 떠오르며 나타난다 */
+html.oneui-theme ytmusic-browse-response #contents > ytmusic-section-list-renderer > #contents > *,
+html.oneui-theme ytmusic-search-page ytmusic-section-list-renderer > #contents > *,
+html.oneui-theme ytmusic-browse-response ytmusic-responsive-header-renderer,
+html.oneui-theme ytmusic-browse-response ytmusic-immersive-header-renderer {
+  animation: oneui-rise var(--oneui-morph) var(--oneui-ease) both;
+}
+/* 카드 · 목록 줄 */
+/* (카드 · 줄 하나하나의 페이드는 한꺼번에 수백 개가 붙을 때 렉이 걸려 뺐다 — 셸프 단위로만 떠오른다) */
+html.oneui-theme ytmusic-two-row-item-renderer .image-wrapper img {
+  transition: transform var(--oneui-morph) var(--oneui-ease) !important;
+}
+html.oneui-theme ytmusic-two-row-item-renderer:hover .image-wrapper img {
+  transform: scale(1.04);
+}
+/* 메뉴 · 대화상자 · 토스트 · 툴팁 · 검색 추천은 살짝 튀어나오며 */
+html.oneui-theme tp-yt-iron-dropdown .dropdown-content,
+html.oneui-theme ytmusic-menu-popup-renderer,
+html.oneui-theme ytmusic-multi-page-menu-renderer {
+  animation: oneui-pop var(--oneui-medium) var(--oneui-ease) both;
+  transform-origin: top right;
+}
+html.oneui-theme tp-yt-paper-dialog,
+html.oneui-theme ytmusic-dialog {
+  animation: oneui-pop var(--oneui-morph) var(--oneui-spring) both;
+}
+html.oneui-theme tp-yt-paper-toast {
+  animation: oneui-rise var(--oneui-morph) var(--oneui-spring) both;
+}
+html.oneui-theme tp-yt-paper-tooltip #tooltip {
+  animation: oneui-drop var(--oneui-fast) var(--oneui-smooth) both;
+}
+html.oneui-theme ytmusic-search-box #suggestion-list > * {
+  animation: oneui-drop var(--oneui-medium) var(--oneui-ease) both;
+}
+/* 재생 화면 탭 전환 · 가사 줄 · 큐 머리글 */
+html.oneui-theme ytmusic-player-page #tab-renderer > * {
+  animation: oneui-fade-in var(--oneui-medium) var(--oneui-smooth) both;
+}
+html.oneui-theme #synced-lyrics-container .synced-line {
+  transition:
+    opacity var(--oneui-medium) var(--oneui-smooth),
+    background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+/* 재생 바 · 아이콘 · 칩 · 슬라이더 색 변화 */
+html.oneui-theme [data-oneui-icon] {
+  transition: background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme ytmusic-player-bar .title,
+html.oneui-theme ytmusic-player-bar .byline,
+html.oneui-theme ytmusic-player-bar .thumbnail-image-wrapper img {
+  animation: oneui-fade-in var(--oneui-medium) var(--oneui-smooth);
+}
+/* 사이드바 줄 · 선택 */
+html.oneui-theme ytmusic-guide-entry-renderer .title {
+  transition: font-weight var(--oneui-medium), color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+/* 움직임 줄이기 설정을 켠 사람에겐 애니메이션을 최소화 */
+@media (prefers-reduced-motion: reduce) {
+  html.oneui-theme *,
+  html.oneui-theme *::before,
+  html.oneui-theme *::after {
+    animation-duration: 1ms !important;
+    transition-duration: 1ms !important;
+  }
+}
+
+/* ================================================================
+ * 41. 검색창 — 검색어가 있을 때 YT 가 바깥 틀에 그리는 1px 사각 테두리 없애기
+ *     추천 항목마다 깔린 불투명 배경도 걷어 유리(블러)가 보이게
+ * ================================================================ */
+html.oneui-theme ytmusic-search-box,
+html.oneui-theme ytmusic-search-box[has-query],
+html.oneui-theme ytmusic-search-box[opened] {
+  border: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-radius: 24px !important;
+  background: transparent !important;
+}
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestion,
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestions-section,
+html.oneui-theme ytmusic-search-box #suggestion-list > * {
+  background: transparent !important;
+}
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestion:hover,
+html.oneui-theme ytmusic-search-box ytmusic-search-suggestion[selected] {
+  background: var(--oneui-hover) !important;
+}
+
+/* ================================================================
+ * 42. 스크롤 그라데이션 (scroll-fade.ts) — 더 있는 쪽 끝을 부드럽게 흐린다
+ * ================================================================ */
+@property --oneui-fade-start {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+@property --oneui-fade-end {
+  syntax: '<length>';
+  inherits: false;
+  initial-value: 0px;
+}
+html.oneui-theme [data-oneui-fade] {
+  transition:
+    --oneui-fade-start var(--oneui-medium) var(--oneui-smooth),
+    --oneui-fade-end var(--oneui-medium) var(--oneui-smooth) !important;
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--oneui-fade-start),
+    #000 calc(100% - var(--oneui-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 var(--oneui-fade-start),
+    #000 calc(100% - var(--oneui-fade-end)),
+    transparent 100%
+  );
+}
+html.oneui-theme [data-oneui-fade='x'] {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--oneui-fade-start),
+    #000 calc(100% - var(--oneui-fade-end)),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 var(--oneui-fade-start),
+    #000 calc(100% - var(--oneui-fade-end)),
+    transparent 100%
+  );
+}
+
+/* ================================================================
+ * 43. 재생 바 시간 글씨 크게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .time-info.ytmusic-player-bar {
+  font-size: 14px !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.01em;
+}
+
+/* ================================================================
+ * 44. 검색 최상단 결과 카드 — 안쪽 흐린 배경 층이 아래로 12px 삐져나와 어두운 띠가 생기고,
+ *     안쪽 여백 때문에 카드가 12px 넓어 오른쪽이 비어져 나오던 것
+ * ================================================================ */
+html.oneui-theme ytmusic-card-shelf-renderer .card-container {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-card-shelf-renderer #background.immersive-background {
+  display: none !important;
+}
+
+/* ================================================================
+ * 45. 곡 줄 · 카드의 재생 오버레이 — 썸네일과 같은 둥근 모양으로 잘라 사각형 그림자가 안 보이게
+ * ================================================================ */
+html.oneui-theme ytmusic-responsive-list-item-renderer .left-items {
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-responsive-list-item-renderer ytmusic-item-thumbnail-overlay-renderer,
+html.oneui-theme ytmusic-responsive-list-item-renderer ytmusic-item-thumbnail-overlay-renderer #background,
+html.oneui-theme ytmusic-responsive-list-item-renderer ytmusic-background-overlay-renderer {
+  border-radius: var(--oneui-radius-thumb) !important;
+}
+html.oneui-theme ytmusic-two-row-item-renderer ytmusic-item-thumbnail-overlay-renderer,
+html.oneui-theme ytmusic-two-row-item-renderer ytmusic-item-thumbnail-overlay-renderer #background {
+  border-radius: var(--oneui-radius-art) !important;
+}
+/* 썸네일 없는 앨범 수록곡 줄: 재생 중 표시만 보이고 검은 오버레이는 깔지 않는다 */
+html.oneui-theme ytmusic-responsive-list-item-renderer:not(:has(ytmusic-thumbnail-renderer img[src]))
+  ytmusic-item-thumbnail-overlay-renderer #background {
+  background: transparent !important;
+}
+
+/* ================================================================
+ * 46. 흰색 강조 — 강조색이 흰색이 되면서 그 위 글씨 · 아이콘은 검정
+ * ================================================================ */
+html.oneui-theme .ytSpecButtonShapeNextFilled yt-icon,
+html.oneui-theme .ytSpecButtonShapeNextFilled .ytIconWrapperHost,
+html.oneui-theme .yt-spec-button-shape-next--filled yt-icon,
+html.oneui-theme ytmusic-responsive-header-renderer ytmusic-play-button-renderer yt-icon {
+  color: var(--oneui-on-accent) !important;
+}
+html.oneui-theme .ytSpecButtonShapeNextFilled,
+html.oneui-theme .yt-spec-button-shape-next--filled {
+  box-shadow: 0 4px 14px rgb(0 0 0 / 0.25) !important;
+}
+/* 선택된 칩 · 탭 */
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] .text,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] yt-formatted-string,
+html.oneui-theme ytmusic-chip-cloud-chip-renderer[is-selected] yt-icon {
+  color: var(--oneui-on-accent) !important;
+  fill: currentColor !important;
+}
+html.oneui-theme ytmusic-player-page tp-yt-paper-toggle-button,
+html.oneui-theme tp-yt-paper-toggle-button {
+  --paper-toggle-button-checked-bar-color: #ffffff !important;
+  --paper-toggle-button-checked-button-color: #ffffff !important;
+  --paper-toggle-button-checked-ink-color: #ffffff !important;
+}
+
+/* ================================================================
+ * 47. 재생 화면 오른쪽 패널 — 유리를 더 투명하게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page #side-panel {
+  background: rgb(30 30 34 / 0.32) !important;
+}
+
+/* ================================================================
+ * 48. 곡 목록 줄 — 둥근 테두리 대신 일자 구분선 · 줄 사이 여유
+ *     (둥근 줄의 아래 테두리가 양 끝에서 휘어 보이던 것)
+ *     구분선은 카드로 묶인 목록(재생 화면 · 앨범 · 검색)에만, 메인 화면 가로 목록(빠른 선곡 등)엔 없음
+ * ================================================================ */
+html.oneui-theme ytmusic-player-queue-item,
+html.oneui-theme ytmusic-responsive-list-item-renderer {
+  border-bottom: 0 !important;
+}
+html.oneui-theme ytmusic-player-queue-item,
+html.oneui-theme ytmusic-playlist-shelf-renderer ytmusic-responsive-list-item-renderer,
+html.oneui-theme ytmusic-shelf-renderer ytmusic-responsive-list-item-renderer {
+  background-image: linear-gradient(var(--oneui-divider), var(--oneui-divider)) !important;
+  background-size: calc(100% - 24px) 1px !important;
+  background-position: center bottom !important;
+  background-repeat: no-repeat !important;
+}
+/* 재생 화면 곡 줄은 하나씩 감싸는 상자가 있어 :last-child 가 모든 줄에 걸린다 → 목록의 마지막 상자만 */
+html.oneui-theme ytmusic-player-queue #contents > :last-child ytmusic-player-queue-item,
+html.oneui-theme ytmusic-playlist-shelf-renderer ytmusic-responsive-list-item-renderer:last-child,
+html.oneui-theme ytmusic-shelf-renderer ytmusic-responsive-list-item-renderer:last-child,
+html.oneui-theme ytmusic-player-queue-item[selected],
+html.oneui-theme ytmusic-player-queue-item:hover,
+html.oneui-theme ytmusic-responsive-list-item-renderer:hover,
+html.oneui-theme ytmusic-responsive-list-item-renderer[play-button-state='playing'],
+html.oneui-theme ytmusic-responsive-list-item-renderer[play-button-state='paused'],
+html.oneui-theme ytmusic-carousel ytmusic-responsive-list-item-renderer {
+  background-image: none !important;
+}
+html.oneui-theme ytmusic-player-queue-item {
+  padding-top: 6px !important;
+  padding-bottom: 6px !important;
+  box-sizing: content-box !important;
+}
+html.oneui-theme ytmusic-player-page ytmusic-player-queue #contents {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* ================================================================
+ * 49. 재생 화면 탭 — 고른 탭의 그림자가 위아래로 잘리지 않게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs.tab-header-container,
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs #tabsContainer {
+  overflow: visible !important;
+}
+
+/* ================================================================
+ * 50. 실시간 가사 줄 간격 — 위아래 안쪽 여백 20px → 2/3 수준
+ * ================================================================ */
+html.oneui-theme {
+  --lyrics-padding: 8px !important;
+}
+html.oneui-theme #synced-lyrics-container .text-lyrics {
+  padding-top: 8px !important;
+  padding-bottom: 8px !important;
+  margin: 2px 0 !important;
+}
+
+/* ================================================================
+ * 51. 플로팅 바 — 조금 높게, 재생 바 선을 카드 안쪽 위에 자연스럽게 품는다
+ * ================================================================ */
+html.oneui-theme.oneui-floating-player ytmusic-app-layout,
+html.oneui-theme.oneui-floating-player ytmusic-app {
+  --ytmusic-player-bar-height: 96px !important;
+}
+html.oneui-theme.oneui-floating-player ytmusic-player-bar {
+  height: 96px !important;
+  padding-top: 24px !important;
+  box-sizing: border-box !important;
+}
+html.oneui-theme.oneui-floating-player #player-bar-background {
+  height: 96px !important;
+}
+/* 선은 카드 위 가장자리가 아니라 안쪽 18px 높이에 (YT 가 translateY(-50%) 로 끌어올리므로 top = 선 중심) */
+html.oneui-theme.oneui-floating-player ytmusic-player-bar #progress-bar {
+  top: 18px !important;
+}
+
+/* ================================================================
+ * 52. 스크롤바 숨기기 — 버튼 · 휠로 넘기는 가로 목록과 칩 줄
+ * ================================================================ */
+html.oneui-theme ytmusic-carousel #items,
+html.oneui-theme ytmusic-chip-cloud-renderer #chips,
+html.oneui-theme ytmusic-player-page tp-yt-paper-tabs #tabsContainer {
+  scrollbar-width: none !important;
+}
+html.oneui-theme ytmusic-carousel #items::-webkit-scrollbar,
+html.oneui-theme ytmusic-chip-cloud-renderer #chips::-webkit-scrollbar {
+  display: none !important;
+  height: 0 !important;
+}
+/* 세로 스크롤바도 얇은 오버레이처럼 — 마우스를 올렸을 때만 보인다 */
+html.oneui-theme ::-webkit-scrollbar-thumb {
+  background-color: transparent !important;
+}
+html.oneui-theme *:hover::-webkit-scrollbar-thumb {
+  background-color: var(--oneui-divider) !important;
+}
+
+/* ================================================================
+ * 53. 설명 말풍선 (tooltip.ts) — 테두리 없는 둥근 유리
+ * ================================================================ */
+html.oneui-theme .oneui-tooltip {
+  position: fixed;
+  z-index: 100000;
+  pointer-events: none;
+  padding: 7px 12px;
+  border-radius: 12px;
+  background: var(--oneui-glass-strong);
+  backdrop-filter: var(--oneui-blur);
+  color: var(--oneui-on-surface);
+  font: 600 13px/1.3 var(--oneui-font);
+  box-shadow: 0 6px 20px var(--oneui-shadow);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(-4px) scale(0.96);
+  transition:
+    opacity var(--oneui-fast) var(--oneui-smooth),
+    transform var(--oneui-medium) var(--oneui-ease) !important;
+}
+html.oneui-theme .oneui-tooltip.above {
+  transform: translateY(4px) scale(0.96);
+}
+html.oneui-theme .oneui-tooltip.show {
+  opacity: 1;
+  transform: none;
+}
+html.oneui-theme .oneui-tooltip.measure {
+  transition: none !important;
+  visibility: hidden;
+}
+/* YT 자체 말풍선도 같은 모양으로 */
+html.oneui-theme tp-yt-paper-tooltip #tooltip {
+  border: 0 !important;
+  border-radius: 12px !important;
+  padding: 7px 12px !important;
+  font: 600 13px/1.3 var(--oneui-font) !important;
+  box-shadow: 0 6px 20px var(--oneui-shadow) !important;
+}
+
+/* ================================================================
+ * 54. '다시 듣기' 2행 — 16:9 영상 썸네일도 1:1 로 맞춰 여백이 고르게
+ * ================================================================ */
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer {
+  width: 164px !important;
+  min-width: 164px !important;
+}
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer .image-wrapper,
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer ytmusic-thumbnail-renderer {
+  width: 164px !important;
+  height: 164px !important;
+  aspect-ratio: 1 / 1 !important;
+}
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer ytmusic-thumbnail-renderer img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* ================================================================
+ * 55. ⋮ 메뉴 — 안쪽 목록의 1px 사각 테두리가 둥근 모서리에서 잘려 직선만 남던 것
+ * ================================================================ */
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox,
+html.oneui-theme ytmusic-menu-popup-renderer #items,
+html.oneui-theme tp-yt-iron-dropdown tp-yt-paper-listbox {
+  border: 0 !important;
+  outline: 0 !important;
+}
+
+/* ================================================================
+ * 56. 블러 대역 상자 (backdrop-proxy.ts) — 상단 바 안쪽(검색창 · 추천 목록) 밑에 깔린다
+ *     z-index 4: 페이지 내용 위, 상단 바(5) 아래
+ * ================================================================ */
+html.oneui-theme .oneui-bf-proxy {
+  position: fixed;
+  z-index: 4;
+  pointer-events: none;
+  backdrop-filter: var(--oneui-blur);
+  opacity: 0;
+  transition: opacity var(--oneui-fast) var(--oneui-smooth) !important;
+}
+/* 대역이 블러를 맡으므로 검색 쪽 유리는 조금 더 투명하게 해 블러가 잘 보이게 */
+html.oneui-theme ytmusic-search-box[opened] .search-box,
+html.oneui-theme ytmusic-search-box[opened] #suggestion-list {
+  background: rgb(40 40 44 / 0.6) !important;
+}
+/* 감싼 칸(링크 상자)이 세로로 늘어나 제목이 밀리던 것 — 칸도 정사각형으로, 줄 높이에 맞춰 늘어나지 않게 */
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer {
+  height: auto !important;
+  align-self: start !important;
+}
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer a.image-wrapper {
+  display: block !important;
+  height: 164px !important;
+  max-height: 164px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+}
+
+/* ================================================================
+ * 57. 다시 듣기 — 가운데 재생 아이콘 없애고, 마우스를 올리면 위쪽만 어둡게 (재생 화면과 같은 효과)
+ * ================================================================ */
+html.oneui-theme .oneui-two-rows ytmusic-two-row-item-renderer ytmusic-play-button-renderer {
+  display: none !important;
+}
+html.oneui-theme ytmusic-two-row-item-renderer ytmusic-item-thumbnail-overlay-renderer #background {
+  background: linear-gradient(to bottom, rgb(0 0 0 / 0.55) 0%, rgb(0 0 0 / 0) 45%) !important;
+}
+
+/* ================================================================
+ * 58. 검색창 — 추천 목록은 검색창 밑에 떨어진 둥근 카드로 (모든 모서리 둥글게)
+ *     추천이 없을 땐(빈 검색) 빈 띠가 뜨지 않게 숨긴다
+ * ================================================================ */
+html.oneui-theme ytmusic-search-box[opened] .search-box,
+html.oneui-theme ytmusic-search-box[opened]:not(:has(ytmusic-search-suggestion)) .search-box {
+  border-radius: 24px !important;
+}
+html.oneui-theme ytmusic-search-box[opened] #suggestion-list {
+  margin-top: 8px !important;
+  border-radius: 24px !important;
+  padding: 6px 0 !important;
+}
+html.oneui-theme ytmusic-search-box[opened]:not(:has(ytmusic-search-suggestion)) #suggestion-list {
+  display: none !important;
+}
+
+/* ================================================================
+ * 59. 노래 / 동영상 전환 — 재생 화면 탭과 같은 크기(높이 44), 앨범아트와 여유 있게
+ * ================================================================ */
+html.oneui-theme ytmusic-av-toggle .av-toggle {
+  padding: 4px !important;
+  height: 44px !important;
+  box-sizing: border-box !important;
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle button {
+  width: 56px !important;
+  min-width: 56px !important;
+  height: 36px !important;
+}
+html.oneui-theme ytmusic-av-toggle .av-toggle button::before {
+  width: 20px;
+  height: 20px;
+  -webkit-mask-size: 20px;
+  mask-size: 20px;
+}
+html.oneui-theme ytmusic-player-page ytmusic-av-toggle {
+  margin-bottom: 24px !important;
+}
+
+/* ================================================================
+ * 60. 플로팅 바 — 앨범아트 · 곡명 크게 (가수 줄은 그대로)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .thumbnail-image-wrapper,
+html.oneui-theme ytmusic-player-bar img.image,
+html.oneui-theme ytmusic-player-bar .image.ytmusic-player-bar {
+  width: 52px !important;
+  height: 52px !important;
+  min-width: 52px !important;
+}
+html.oneui-theme ytmusic-player-bar .title.ytmusic-player-bar {
+  font-size: 16px !important;
+  line-height: 1.3 !important;
+}
+
+/* ================================================================
+ * 61. 재생 화면 열기 버튼 — 흰 원 + 검은 아이콘
+ * ================================================================ */
+html.oneui-theme body ytmusic-player-bar .toggle-player-page-button {
+  background: #ffffff !important;
+  border-radius: 50% !important;
+}
+html.oneui-theme ytmusic-player-bar .toggle-player-page-button yt-icon {
+  color: #000000 !important;
+}
+
+/* ================================================================
+ * 62. 창 크기 조절 — 레이아웃이 뚝 바뀌지 않고 미끄러지듯 바뀌게
+ *     YT 는 창 크기에 맞춰 재생 화면 크기를 변수(--ytmusic-player-page-*)로 다시 계산한다.
+ *     그 값으로 정해지는 크기 · 위치에 전환을 주면 새 크기로 부드럽게 이어진다.
+ *     (크기 조절 중엔 블러만 잠깐 꺼서 다시 그리기를 가볍게)
+ * ================================================================ */
+html.oneui-theme body ytmusic-player-page #player,
+html.oneui-theme body ytmusic-player-page #song-image,
+html.oneui-theme body ytmusic-player-page #main-panel,
+html.oneui-theme body ytmusic-player-page #side-panel,
+html.oneui-theme body ytmusic-player-page .content,
+html.oneui-theme body #guide-wrapper,
+html.oneui-theme body ytmusic-nav-bar .center-content,
+html.oneui-theme body ytmusic-search-box {
+  transition:
+    width 420ms var(--oneui-smooth),
+    height 420ms var(--oneui-smooth),
+    max-width 420ms var(--oneui-smooth),
+    max-height 420ms var(--oneui-smooth),
+    margin 420ms var(--oneui-smooth),
+    padding 420ms var(--oneui-smooth),
+    left 420ms var(--oneui-smooth),
+    top 420ms var(--oneui-smooth),
+    flex-basis 420ms var(--oneui-smooth),
+    transform var(--oneui-medium) var(--oneui-ease),
+    opacity var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme.oneui-resizing #nav-bar-background,
+html.oneui-theme.oneui-resizing #player-bar-background,
+html.oneui-theme.oneui-resizing ytmusic-player-page #side-panel,
+html.oneui-theme.oneui-resizing .oneui-bf-proxy {
+  backdrop-filter: none !important;
+}
+
+/* ================================================================
+ * 63. ⋮ 메뉴 — 닫힐 때도 애니메이션 · 줄 hover 를 둥글게 · 최대 높이 + 스크롤
+ * ================================================================ */
+@keyframes oneui-pop-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: scale(0.94); }
+}
+html.oneui-theme tp-yt-iron-dropdown.oneui-closing .dropdown-content,
+html.oneui-theme tp-yt-iron-dropdown.oneui-closing ytmusic-menu-popup-renderer,
+html.oneui-theme tp-yt-iron-dropdown.oneui-closing ytmusic-multi-page-menu-renderer {
+  animation: oneui-pop-out 200ms var(--oneui-smooth) forwards !important;
+  pointer-events: none !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox > *,
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox > * *:not(yt-icon):not(svg):not(path) {
+  border-radius: var(--oneui-radius-field) !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox > * {
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer {
+  max-height: calc(100vh - 160px) !important;
+  display: flex !important;
+  flex-direction: column;
+}
+html.oneui-theme ytmusic-menu-popup-renderer tp-yt-paper-listbox {
+  max-height: calc(100vh - 160px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+}
+html.oneui-theme tp-yt-iron-dropdown .dropdown-content {
+  max-height: calc(100vh - 160px) !important;
+}
+
+/* ================================================================
+ * 64. 재생 화면 전환 — 튕김 없는 우아한 감속 (길게, 부드럽게 자리 잡음)
+ * ================================================================ */
+html.oneui-theme body ytmusic-player-page {
+  transition:
+    transform 640ms cubic-bezier(0.22, 1, 0.36, 1),
+    background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme ytmusic-app-layout[player-page-open] ytmusic-player-page #main-panel,
+html.oneui-theme ytmusic-app-layout[player-page-open] ytmusic-player-page #side-panel {
+  animation: oneui-rise 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+html.oneui-theme ytmusic-app-layout[player-page-open] ytmusic-player-page #side-panel {
+  animation-delay: 60ms;
+}
+
+/* ================================================================
+ * 65. 앨범아트 로딩 — 불러오는 동안 빛이 지나가는 임시 배경, 다 불러오면 페이드인
+ *     (YT 썸네일 상자는 이미지가 다 불러와지면 loaded 표시가 붙는다)
+ * ================================================================ */
+@keyframes oneui-shimmer {
+  from { background-position: 150% 0; }
+  to { background-position: -50% 0; }
+}
+html.oneui-theme yt-img-shadow:not([loaded]) {
+  background-color: rgb(255 255 255 / 0.06) !important;
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    rgb(255 255 255 / 0.08) 50%,
+    transparent 70%
+  ) !important;
+  background-size: 200% 100% !important;
+}
+html.oneui-theme yt-img-shadow img {
+  transition: opacity 420ms var(--oneui-smooth) !important;
+}
+html.oneui-theme yt-img-shadow:not([loaded]) img {
+  opacity: 0 !important;
+}
+
+/* ================================================================
+ * 66. 플로팅 바 — 좋아요 · 싫어요 숨김(⋮ 메뉴로 이동) · 가수만 · 글씨 크게 · 실시간 가사 한 줄
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar ytmusic-like-button-renderer {
+  display: none !important;
+}
+html.oneui-theme ytmusic-player-bar .byline-wrapper .byline,
+html.oneui-theme ytmusic-player-bar .byline-wrapper .byline + *,
+html.oneui-theme ytmusic-player-bar .byline-wrapper > .subtitle {
+  display: none !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-artist {
+  display: block;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--oneui-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+html.oneui-theme ytmusic-player-bar .title.ytmusic-player-bar {
+  font-size: 18px !important;
+  line-height: 1.3 !important;
+}
+html.oneui-theme ytmusic-player-bar .time-info.ytmusic-player-bar {
+  font-size: 15px !important;
+}
+/* 가사 한 줄 */
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric {
+  display: none;
+  align-items: center;
+  margin-left: 12px;
+  max-width: 340px;
+  min-width: 0;
+  height: 36px;
+  padding: 0 16px;
+  border-radius: var(--oneui-radius-pill);
+  background: var(--oneui-chip);
+  overflow: hidden;
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric.has-lyrics {
+  display: flex;
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--oneui-on-surface);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@keyframes oneui-lyric-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric span.in {
+  animation: oneui-lyric-in var(--oneui-medium) var(--oneui-smooth);
+}
+
+/* ⋮ 메뉴에 넣는 좋아요 · 싫어요 항목 (YT 메뉴 줄과 같은 크기) */
+html.oneui-theme .oneui-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 48px;
+  padding: 0 16px;
+  border-radius: var(--oneui-radius-field);
+  color: var(--oneui-on-surface);
+  font: 500 15px var(--oneui-font);
+  cursor: pointer;
+  transition: background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme .oneui-menu-item:hover {
+  background: var(--oneui-hover);
+}
+html.oneui-theme .oneui-menu-item .icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+}
+html.oneui-theme .oneui-menu-item svg {
+  width: 24px;
+  height: 24px;
+}
+html.oneui-theme .oneui-menu-dislike svg {
+  transform: rotate(180deg);
+}
+html.oneui-theme .oneui-menu-item.active svg path {
+  fill: currentColor;
+}
+html.oneui-theme .oneui-menu-sep {
+  height: 1px;
+  margin: 6px 16px;
+  background: var(--oneui-divider);
+}
+
+/* ================================================================
+ * 67. 자동재생 토글 — One UI 스위치 (둥근 트랙 안에 손잡이가 들어 있는 모양)
+ * ================================================================ */
+html.oneui-theme tp-yt-paper-toggle-button {
+  width: 48px !important;
+  height: 28px !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button .toggle-container {
+  width: 48px !important;
+  height: 28px !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button #toggleBar {
+  top: 0 !important;
+  left: 0 !important;
+  width: 48px !important;
+  height: 28px !important;
+  border-radius: 14px !important;
+  opacity: 1 !important;
+  background: rgb(255 255 255 / 0.22) !important;
+  transition: background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button #toggleButton {
+  top: 4px !important;
+  left: 4px !important;
+  width: 20px !important;
+  height: 20px !important;
+  border-radius: 50% !important;
+  background: #ffffff !important;
+  box-shadow: 0 1px 4px rgb(0 0 0 / 0.35) !important;
+  transform: translateX(0) !important;
+  transition:
+    transform var(--oneui-medium) var(--oneui-ease),
+    background-color var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button[checked] #toggleBar {
+  background: var(--oneui-wave-color, #ffffff) !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button[checked] #toggleButton {
+  transform: translateX(20px) !important;
+  background: #ffffff !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button #toggleButton::before,
+html.oneui-theme tp-yt-paper-toggle-button tp-yt-paper-ripple {
+  display: none !important;
+}
+
+/* ================================================================
+ * 68. 다음 트랙 앨범아트 — 32 → 44px, 재생 중 덮개도 둥글게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-queue-item .left-items,
+html.oneui-theme ytmusic-player-queue-item .left-items yt-img-shadow,
+html.oneui-theme ytmusic-player-queue-item .left-items img,
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay {
+  width: 44px !important;
+  height: 44px !important;
+}
+html.oneui-theme ytmusic-player-queue-item .left-items,
+html.oneui-theme ytmusic-player-queue-item .left-items *,
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay,
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay * {
+  border-radius: var(--oneui-radius-thumb) !important;
+}
+html.oneui-theme ytmusic-player-queue-item .left-items {
+  overflow: hidden !important;
+}
+
+/* ================================================================
+ * 69. 스크롤바 — 앱 어디서나 숨김 (스크롤은 그대로)
+ * ================================================================ */
+/* (scrollbar-width 를 모든 요소에 거는 규칙은 성능 때문에 뺐다 — 아래 ::-webkit-scrollbar 만으로 숨겨진다) */
+html.oneui-theme ::-webkit-scrollbar,
+html.oneui-theme *::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* ================================================================
+ * 70. 글씨 선명하게 — 윈도우는 투명한 GPU 레이어 위 글씨를 흐린 회색조로 그린다(ClearType 꺼짐).
+ *     유리(블러)는 글씨 상자 자체가 아니라 뒤에 깔린 ::before 층에 두고, 글씨가 있는 곳의 레이어 분리를 푼다.
+ * ================================================================ */
+html.oneui-theme body ytmusic-player-page {
+  will-change: auto !important;
+}
+html.oneui-theme ytmusic-player-page #side-panel {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  isolation: isolate;
+  will-change: auto !important;
+}
+html.oneui-theme ytmusic-player-page #side-panel::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: rgb(30 30 34 / 0.32);
+  backdrop-filter: var(--oneui-blur);
+  pointer-events: none;
+}
+html.oneui-theme ytmusic-menu-popup-renderer {
+  backdrop-filter: none !important;
+  isolation: isolate;
+}
+html.oneui-theme ytmusic-menu-popup-renderer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  background: var(--oneui-glass-strong);
+  backdrop-filter: var(--oneui-blur);
+}
+html.oneui-theme body {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: subpixel-antialiased;
+}
+
+/* ================================================================
+ * 71. 플로팅 바 배치 — 가운데 묶음은 실제 왼쪽 · 오른쪽 내용 사이 가운데에,
+ *     곡 정보 · 가사 칸은 폭 고정 (가사 길이가 바뀌어도 앨범아트 · 곡명이 움직이지 않게)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar {
+  display: flex !important;
+  align-items: center !important;
+}
+html.oneui-theme ytmusic-player-bar #left-controls,
+html.oneui-theme ytmusic-player-bar #right-controls {
+  flex: 0 0 auto !important;
+  width: auto !important;
+}
+html.oneui-theme ytmusic-player-bar .middle-controls {
+  flex: 1 1 auto !important;
+  min-width: 0 !important;
+  justify-content: center !important;
+}
+html.oneui-theme ytmusic-player-bar .content-info-wrapper {
+  flex: 0 0 240px !important;
+  width: 240px !important;
+  min-width: 0 !important;
+  align-items: flex-start !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric.has-lyrics {
+  flex: 0 0 300px !important;
+  width: 300px !important;
+  max-width: 300px !important;
+  box-sizing: border-box;
+}
+/* 2. 가수 이름 왼쪽 정렬 */
+html.oneui-theme ytmusic-player-bar .byline-wrapper {
+  justify-content: flex-start !important;
+  width: 100% !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-artist {
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: left;
+}
+html.oneui-theme ytmusic-player-bar .title.ytmusic-player-bar {
+  width: 100% !important;
+  text-align: left !important;
+}
+
+/* ================================================================
+ * 72. 볼륨 슬라이더 — 평소엔 자리를 차지하지 않다가, 마우스를 올리면 부드럽게 펼쳐진다
+ *     펼쳐지는 만큼 가운데 묶음이 자연스럽게 왼쪽으로 비켜 준다. 손잡이 작게.
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar #volume-slider {
+  width: 0 !important;
+  min-width: 0 !important;
+  padding: 0 !important;
+  /* 펼칠 때만 여백이 바뀌면 스피커 버튼이 6px 움직여 마우스에서 벗어났다 들어왔다를 반복했다 → 항상 같은 값 */
+  margin: 0 -6px 0 0 !important;
+  opacity: 0 !important;
+  overflow: hidden !important;
+  transition:
+    width var(--oneui-medium) var(--oneui-ease),
+    opacity var(--oneui-fast) var(--oneui-smooth),
+    margin var(--oneui-medium) var(--oneui-ease) !important;
+  transition-delay: 220ms !important;
+}
+html.oneui-theme ytmusic-player-bar #right-controls:has(.volume:hover, #volume-slider:hover) #volume-slider,
+html.oneui-theme ytmusic-player-bar #volume-slider[dragging],
+html.oneui-theme ytmusic-player-bar #volume-slider:focus-within {
+  width: 130px !important;
+  padding: 0 18px 0 6px !important;
+  margin-right: -6px !important;
+  opacity: 1 !important;
+  transition-delay: 0ms !important;
+}
+html.oneui-theme ytmusic-player-bar #volume-slider .slider-knob-inner,
+html.oneui-theme ytmusic-player-bar #expand-volume-slider .slider-knob-inner {
+  transform: scale(0.6) !important;
+}
+
+/* ================================================================
+ * 73. 재생 바 아이콘 (bar-icons.ts) — 모양 변환
+ * ================================================================ */
+html.oneui-theme .oneui-svg-host {
+  background: none !important;
+  -webkit-mask: none !important;
+  mask: none !important;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+}
+html.oneui-theme .oneui-svg-host > :not(svg.oneui-svg) {
+  display: none !important;
+}
+html.oneui-theme svg.oneui-svg {
+  width: 24px;
+  height: 24px;
+  fill: currentColor;
+  overflow: visible;
+}
+html.oneui-theme #play-pause-button svg.oneui-svg {
+  width: 28px;
+  height: 28px;
+}
+html.oneui-theme svg.oneui-svg .line {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* 재생 ↔ 일시정지: 도형 자체가 이어지며 바뀐다 */
+html.oneui-theme svg.oneui-svg .pp-a,
+html.oneui-theme svg.oneui-svg .pp-b {
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linejoin: round;
+  transition: d 380ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 이전 · 다음: 새 삼각형이 옆에서 커지며 대신한다 */
+@keyframes oneui-tri-in-next {
+  0% { transform: translateX(-7px) scale(0.2); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+@keyframes oneui-tri-in-prev {
+  0% { transform: translateX(7px) scale(0.2); opacity: 0; }
+  60% { opacity: 1; }
+  100% { transform: none; opacity: 1; }
+}
+html.oneui-theme svg.oneui-svg .tri {
+  transform-box: fill-box;
+  transform-origin: left center;
+}
+html.oneui-theme .previous-button svg.oneui-svg .tri {
+  transform-origin: right center;
+}
+html.oneui-theme .next-button svg.oneui-svg.swap .tri {
+  animation: oneui-tri-in-next 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.oneui-theme .previous-button svg.oneui-svg.swap .tri {
+  animation: oneui-tri-in-prev 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* 셔플 · 반복: 선은 그대로, 화살표 머리만 선을 따라 달린다 (bar-icons.ts) */
+html.oneui-theme svg.oneui-svg .head {
+  stroke-width: 1.8;
+}
+html.oneui-theme svg.oneui-svg .one {
+  opacity: 0;
+  transform: scale(0.4);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition:
+    opacity var(--oneui-medium) var(--oneui-smooth),
+    transform var(--oneui-medium) var(--oneui-spring);
+}
+html.oneui-theme svg.oneui-svg.mode-one .one {
+  opacity: 1;
+  transform: none;
+}
+html.oneui-theme svg.oneui-svg .off {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset var(--oneui-medium) var(--oneui-ease);
+}
+html.oneui-theme svg.oneui-svg.mode-off .off {
+  stroke-dashoffset: 0;
+}
+html.oneui-theme svg.oneui-svg {
+  transition: opacity var(--oneui-medium) var(--oneui-smooth);
+}
+/* 볼륨 ↔ 음소거: 물결은 지워지고 X 가 그려진다 */
+html.oneui-theme svg.oneui-svg .wave,
+html.oneui-theme svg.oneui-svg .x {
+  stroke-dasharray: 1;
+  transition: stroke-dashoffset 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+html.oneui-theme svg.oneui-svg .wave { stroke-dashoffset: 0; }
+html.oneui-theme svg.oneui-svg .w2 { transition-delay: 40ms; }
+html.oneui-theme svg.oneui-svg .x { stroke-dashoffset: 1; }
+html.oneui-theme svg.oneui-svg.muted .wave { stroke-dashoffset: 1; }
+html.oneui-theme svg.oneui-svg.muted .x1 { stroke-dashoffset: 0; transition-delay: 160ms; }
+html.oneui-theme svg.oneui-svg.muted .x2 { stroke-dashoffset: 0; transition-delay: 240ms; }
+html.oneui-theme svg.oneui-svg:not(.muted) .w1 { transition-delay: 140ms; }
+html.oneui-theme svg.oneui-svg:not(.muted) .w2 { transition-delay: 200ms; }
+/* 재생 버튼(흰 원) 안의 아이콘은 검정, 열기 버튼도 검정 */
+html.oneui-theme ytmusic-player-bar #play-pause-button svg.oneui-svg,
+html.oneui-theme ytmusic-player-bar .toggle-player-page-button svg.oneui-svg {
+  color: #000000;
+}
+
+/* ================================================================
+ * 74. 자동재생 토글 — 켜지면 흰 트랙 + 검은 손잡이
+ * ================================================================ */
+html.oneui-theme tp-yt-paper-toggle-button[checked] #toggleBar {
+  background: #ffffff !important;
+}
+html.oneui-theme tp-yt-paper-toggle-button[checked] #toggleButton {
+  background: #000000 !important;
+  box-shadow: none !important;
+}
+
+/* ================================================================
+ * 75. 앨범아트 불러오는 동안 — 깨진 이미지 표시 대신 단색 칸, 다 불러오면 페이드인 (image-fade.ts)
+ * ================================================================ */
+html.oneui-theme img:not([src]),
+html.oneui-theme img[src=''] {
+  visibility: hidden !important;
+}
+html.oneui-theme.oneui-img-fade ytmusic-player-bar img,
+html.oneui-theme.oneui-img-fade ytmusic-player-page #song-image img,
+html.oneui-theme.oneui-img-fade ytmusic-player-queue-item img {
+  transition: opacity 420ms var(--oneui-smooth) !important;
+}
+html.oneui-theme.oneui-img-fade ytmusic-player-bar img:not(.oneui-img-ok),
+html.oneui-theme.oneui-img-fade ytmusic-player-page #song-image img:not(.oneui-img-ok),
+html.oneui-theme.oneui-img-fade ytmusic-player-queue-item img:not(.oneui-img-ok) {
+  opacity: 0 !important;
+}
+html.oneui-theme ytmusic-player-bar .thumbnail-image-wrapper,
+html.oneui-theme ytmusic-player-page #song-image,
+html.oneui-theme ytmusic-player-queue-item .left-items {
+  background-color: rgb(255 255 255 / 0.08) !important;
+}
+
+/* ================================================================
+ * 76. 재생 화면 패널 안쪽 좌우 여백 — 스크롤바를 숨기며 사라진 오른쪽 12px 를 되살리고,
+ *     트랙 출처 · 저장 버튼도 자동재생 줄과 같은 여백으로
+ * ================================================================ */
+html.oneui-theme ytmusic-player-page #side-panel #tab-renderer {
+  padding-right: 12px !important;
+}
+html.oneui-theme ytmusic-player-page ytmusic-queue-header-renderer,
+html.oneui-theme ytmusic-player-page #side-panel .autoplay {
+  padding-left: 8px !important;
+  padding-right: 8px !important;
+  box-sizing: border-box !important;
+}
+
+/* ================================================================
+ * 77. ⋮ 메뉴 좋아요 · 싫어요 — 한 줄 두 칸
+ * ================================================================ */
+html.oneui-theme .oneui-menu-row {
+  display: flex;
+  gap: 4px;
+  padding: 0 0 2px;
+}
+html.oneui-theme .oneui-menu-row .oneui-menu-item {
+  flex: 1 1 0;
+  justify-content: center;
+}
+
+/* ================================================================
+ * 78. 메인 화면 스크롤 그라데이션 (scroll-fade.ts) — 배경과 똑같이 칠한 고정 덮개를 마스크로 흐린다
+ * ================================================================ */
+html.oneui-theme .oneui-page-fade {
+  position: fixed;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  pointer-events: none;
+  background: var(--oneui-album-wash), var(--oneui-bg);
+  background-size: 100vw 100vh;
+  opacity: 0;
+  transition: opacity var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme .oneui-page-fade.show {
+  opacity: 1;
+}
+html.oneui-theme .oneui-page-fade-top {
+  top: calc(var(--ytmusic-nav-bar-height, 90px) + var(--menu-bar-height, 0px));
+  height: 44px;
+  background-position: 0 calc(-1 * (var(--ytmusic-nav-bar-height, 90px) + var(--menu-bar-height, 0px)));
+  -webkit-mask-image: linear-gradient(to bottom, #000, transparent);
+  mask-image: linear-gradient(to bottom, #000, transparent);
+}
+html.oneui-theme .oneui-page-fade-bottom {
+  bottom: 0;
+  height: calc(var(--ytmusic-player-bar-height) + var(--oneui-float-gap) * 2 + 40px);
+  background-position: 0 100%;
+  -webkit-mask-image: linear-gradient(to top, rgb(0 0 0 / 0.92) 0%, rgb(0 0 0 / 0.55) 45%, transparent 100%);
+  mask-image: linear-gradient(to top, rgb(0 0 0 / 0.92) 0%, rgb(0 0 0 / 0.55) 45%, transparent 100%);
+}
+/* 재생 화면이 열리면 숨김 */
+html.oneui-theme body:has(ytmusic-app-layout[player-page-open]) .oneui-page-fade {
+  opacity: 0 !important;
+}
+
+
+/* ================================================================
+ * 79. 재생 시간 — 숫자 폭 고정 + 상자 폭 고정 (시간이 바뀌어도 앨범아트 · 곡명 · 가사가 움직이지 않게)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .time-info.ytmusic-player-bar {
+  flex: 0 0 auto !important;
+  width: var(--oneui-time-width, 108px) !important;
+  min-width: var(--oneui-time-width, 108px) !important;
+  white-space: nowrap !important;
+  text-align: left !important;
+  overflow: hidden;
+}
+
+/* ================================================================
+ * 80. 재생 목록 — 앨범아트 덮개: 썸네일과 똑같이 둥글게 잘라 덮고, 더 옅게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-queue-item .left-items {
+  clip-path: inset(0 round var(--oneui-radius-thumb));
+}
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay {
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+}
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay #background {
+  --ytmusic-background-overlay-background: rgb(0 0 0 / 0.38) !important;
+  background: rgb(0 0 0 / 0.38) !important;
+  inset: 0 !important;
+  border-radius: 0 !important;
+}
+
+/* ================================================================
+ * 81. 재생 목록 — 지금 곡: 앨범아트 오른쪽 아래 이퀄라이저 막대 (항상 보임, 위로만 자람)
+ *     멈추면 점 세 개. 마우스를 올렸을 때만 YT 재생 · 일시정지 덮개가 나온다
+ * ================================================================ */
+html.oneui-theme ytmusic-player-queue-item[selected]:not(:hover) .thumbnail-overlay {
+  opacity: 0 !important;
+}
+html.oneui-theme ytmusic-player-queue-item .thumbnail-overlay {
+  transition: opacity var(--oneui-fast) var(--oneui-smooth) !important;
+}
+html.oneui-theme .oneui-eq {
+  position: absolute;
+  right: 4px;
+  bottom: 4px;
+  z-index: 3;
+  height: 16px;
+  display: flex;
+  align-items: flex-end;
+  gap: 2px;
+  pointer-events: none;
+  border-radius: 0 !important;
+  filter: drop-shadow(0 0 2px rgb(0 0 0 / 0.55));
+}
+html.oneui-theme .oneui-eq i {
+  display: block;
+  width: 3px;
+  height: 3px;
+  border-radius: 1.5px !important;
+  background: #fff;
+}
+
+/* ================================================================
+ * 82. 재생 목록 — 지금 곡 바로 위 줄의 구분선도 숨김 (player-extras.ts 가 표시)
+ * ================================================================ */
+html.oneui-theme ytmusic-player-queue-item.oneui-before-selected {
+  background-image: none !important;
+}
+
+/* ================================================================
+ * 83. 플로팅 바 — 실시간 가사 칸이 생기고 사라질 때 앨범아트 · 곡명이 부드럽게 옆으로 비켜 간다
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric {
+  display: flex !important;
+  flex: 0 0 0px !important;
+  width: 0 !important;
+  max-width: 300px !important;
+  margin-left: 0 !important;
+  padding: 0 !important;
+  opacity: 0;
+  box-sizing: border-box;
+  transition:
+    flex-basis var(--oneui-morph) var(--oneui-ease),
+    width var(--oneui-morph) var(--oneui-ease),
+    margin var(--oneui-morph) var(--oneui-ease),
+    padding var(--oneui-morph) var(--oneui-ease),
+    opacity var(--oneui-medium) var(--oneui-smooth) !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric.has-lyrics {
+  flex: 0 0 300px !important;
+  width: 300px !important;
+  margin-left: 12px !important;
+  padding: 0 16px !important;
+  opacity: 1;
+}
+html.oneui-theme ytmusic-player-bar .middle-controls > *,
+html.oneui-theme ytmusic-player-bar .content-info-wrapper {
+  transition: transform var(--oneui-morph) var(--oneui-ease);
+}
+
+/* ================================================================
+ * 84. 곡 더보기(⋮) 메뉴 블러 — 메뉴 상자 자체의 진한 배경이 뒤 유리층을 가리고 있었다
+ * ================================================================ */
+html.oneui-theme body ytmusic-menu-popup-renderer {
+  background: rgb(40 40 44 / 0.6) !important;
+  backdrop-filter: blur(24px) saturate(1.4) !important;
+  -webkit-backdrop-filter: blur(24px) saturate(1.4) !important;
+}
+html.oneui-theme ytmusic-menu-popup-renderer::before {
+  content: none !important;
+}
+
+/* ================================================================
+ * 85. 재생 화면 탭 전환 — 내용이 살짝 떠오르며 바뀐다 (player-extras.ts)
+ * ================================================================ */
+@keyframes oneui-tab-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: none; }
+}
+html.oneui-theme ytmusic-player-page #tab-renderer.oneui-tab-in {
+  animation: oneui-tab-in var(--oneui-medium) var(--oneui-ease);
+}
+html.oneui-theme ytmusic-player-page #tab-renderer > * {
+  animation: none !important;
+}
+
+/* ================================================================
+ * 86. 성능 — YT 의 누름 효과 층 수백 개가 각자 GPU 레이어를 잡고 있던 것을 푼다
+ * ================================================================ */
+html.oneui-theme .ytSpecTouchFeedbackShapeStroke,
+html.oneui-theme .ytSpecTouchFeedbackShapeFill,
+html.oneui-theme yt-interaction .stroke,
+html.oneui-theme yt-interaction .fill {
+  will-change: auto !important;
+}
+
+/* ================================================================
+ * 87. 플로팅 바 아이콘 — 볼륨 · 반복 · 셔플 같은 색 · 같은 굵기
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar #right-controls svg.oneui-svg .line {
+  stroke-width: 2;
+}
+html.oneui-theme ytmusic-player-bar #right-controls :not(.toggle-player-page-button) > button > .oneui-svg-host,
+html.oneui-theme ytmusic-player-bar #right-controls yt-icon-button:not(.toggle-player-page-button) .oneui-svg-host {
+  color: var(--oneui-on-surface) !important;
+  opacity: 1 !important;
+}
+/* 꺼짐 · 음소거는 회색, 켜짐은 흰색 (셔플은 모드가 아니라 '한 번 섞기'라 평소 회색, 섞는 동안만 흰색) */
+html.oneui-theme ytmusic-player-bar #right-controls yt-icon-button:not(.toggle-player-page-button) svg.oneui-svg {
+  color: var(--oneui-on-surface);
+  transition: color var(--oneui-medium) var(--oneui-smooth);
+}
+html.oneui-theme ytmusic-player-bar #right-controls svg.oneui-svg.mode-off,
+html.oneui-theme ytmusic-player-bar #right-controls svg.oneui-svg.muted,
+html.oneui-theme ytmusic-player-bar #right-controls .shuffle svg.oneui-svg:not(.active) {
+  color: var(--oneui-secondary);
+}
+/* 열기 버튼도 반복 ↔ 셔플과 같은 간격(12px) */
+html.oneui-theme ytmusic-player-bar .toggle-player-page-button {
+  margin-left: 4px !important;
+}
+html.oneui-theme ytmusic-player-bar #right-controls yt-icon-button:not(.toggle-player-page-button),
+html.oneui-theme ytmusic-player-bar #right-controls yt-icon-button:not(.toggle-player-page-button) button {
+  color: var(--oneui-on-surface) !important;
+  opacity: 1 !important;
+}
+
+/* ================================================================
+ * 88. 노래 / 동영상 전환 — 뮤직비디오가 없는 곡은 YT 가 전환을 막아 둔다. 눌러도 안 되는 게 보이도록 흐리게
+ * ================================================================ */
+html.oneui-theme ytmusic-av-toggle[toggle-disabled] .av-toggle {
+  opacity: 0.4;
+  cursor: default;
+}
+html.oneui-theme ytmusic-av-toggle[toggle-disabled] .av-toggle button {
+  pointer-events: none;
+}
+
+/* ================================================================
+ * 89. 긴 곡명 · 가수 · 가사 — 말줄임(...) 대신 버스 LED 처럼 옆으로 흘러 끝까지 보인다 (marquee.ts)
+ *     글자는 내용 폭 그대로, 바깥 상자가 잘라 내고, 넘칠 때만 오른쪽 끝을 흐리게
+ * ================================================================ */
+html.oneui-theme ytmusic-player-bar .oneui-mq-text {
+  display: inline-block !important;
+  width: max-content !important;
+  max-width: none !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+html.oneui-theme ytmusic-player-bar .title.oneui-mq-text {
+  display: block !important;
+  width: max-content !important;
+  max-width: none !important;
+  -webkit-line-clamp: unset !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-mq-box {
+  display: block !important;
+  overflow: hidden !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+  min-width: 0;
+}
+html.oneui-theme ytmusic-player-bar .content-info-wrapper {
+  overflow: hidden !important;
+}
+html.oneui-theme ytmusic-player-bar .oneui-mq-text.oneui-mq-over {
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 var(--oneui-mq-l, 0px), #000 calc(100% - var(--oneui-mq-r, 22px)), transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0, #000 var(--oneui-mq-l, 0px), #000 calc(100% - var(--oneui-mq-r, 22px)), transparent 100%);
+  -webkit-mask-size: var(--oneui-mq-w, 100%) 100%;
+  mask-size: var(--oneui-mq-w, 100%) 100%;
+  -webkit-mask-position: var(--oneui-mq-x, 0px) 0;
+  mask-position: var(--oneui-mq-x, 0px) 0;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+/* 가사 칸: 영어 · 한글 모두 같은 여백 (줄 높이 고정, 글자 상자가 칸을 꽉 채움) */
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric .oneui-mq-box {
+  flex: 1 1 auto;
+  line-height: 20px;
+  height: 20px;
+}
+html.oneui-theme ytmusic-player-bar .oneui-bar-lyric .oneui-mq-text {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 20px;
+  color: var(--oneui-on-surface);
+}
+
+/* ================================================================
+ * 90. 다음 곡 앨범아트 — 이전 아트를 받침으로 깔아 두고, 새 아트를 다 불러오면 가운데부터 번지듯 페이드인 (image-fade.ts)
+ * ================================================================ */
+html.oneui-theme .oneui-art-box {
+  position: relative;
+  isolation: isolate;
+}
+html.oneui-theme .oneui-art-under {
+  position: absolute;
+  z-index: -1;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  pointer-events: none;
+}
+/* 재생 바 · 재생 화면 아트는 회색 칸이 아니라 받침이 보이도록, 자체 페이드는 끄고 번짐으로 드러낸다 */
+html.oneui-theme.oneui-img-fade ytmusic-player-bar .thumbnail-image-wrapper img,
+html.oneui-theme.oneui-img-fade ytmusic-player-page #song-image img {
+  transition: none !important;
+}
+@keyframes oneui-art-reveal {
+  from { --oneui-reveal: 0%; opacity: 0.2; }
+  to { --oneui-reveal: 180%; opacity: 1; }
+}
+html.oneui-theme img.oneui-art-reveal {
+  -webkit-mask-image: radial-gradient(circle at 50% 50%, #000 calc(var(--oneui-reveal) - 60%), transparent var(--oneui-reveal));
+  mask-image: radial-gradient(circle at 50% 50%, #000 calc(var(--oneui-reveal) - 60%), transparent var(--oneui-reveal));
+  animation: oneui-art-reveal 700ms cubic-bezier(0.33, 0, 0.2, 1) both;
+}

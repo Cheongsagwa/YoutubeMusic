@@ -1,0 +1,18 @@
+global using System.Numerics;
+global using System.Text.Json.Nodes;
+global using Microsoft.UI;
+global using Microsoft.UI.Composition;
+global using Microsoft.UI.Dispatching;
+global using Microsoft.UI.Text;
+global using Microsoft.UI.Xaml;
+global using Microsoft.UI.Xaml.Controls;
+global using Microsoft.UI.Xaml.Hosting;
+global using Microsoft.UI.Xaml.Input;
+global using Microsoft.UI.Xaml.Media;
+global using Microsoft.UI.Xaml.Media.Imaging;
+global using Windows.Foundation;
+global using Color = Windows.UI.Color;
+global using XPath = Microsoft.UI.Xaml.Shapes.Path;
+global using XEllipse = Microsoft.UI.Xaml.Shapes.Ellipse;
+global using XRect = Microsoft.UI.Xaml.Shapes.Rectangle;
+global using IOPath = System.IO.Path;

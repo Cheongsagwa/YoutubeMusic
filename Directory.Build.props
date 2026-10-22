@@ -1,0 +1,9 @@
+<Project>
+  <!--
+    앱 · 설치 프로그램 공통 버전 — 여기 한 곳만 고친다 (major.minor.patch)
+    major: 앱 경험이 크게 바뀔 때 · minor: 기능 추가 · patch: 버그 수정
+  -->
+  <PropertyGroup>
+    <Version>2.0.0</Version>
+  </PropertyGroup>
+</Project>
