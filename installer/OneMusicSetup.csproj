@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <!--
+    YouTube Music (OneMusic) 설치 프로그램 — One UI 스타일 WPF, exe 하나.
+    앱 파일(publish 폴더)을 payload.zip 으로 묶어 안에 넣는다. 만드는 법: 저장소 맨 위 build-installer.ps1
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <AssemblyName>YouTubeMusicSetup</AssemblyName>
+    <RootNamespace>OneMusicSetup</RootNamespace>
+    <ApplicationIcon>Assets\app.ico</ApplicationIcon>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <PublishSingleFile>true</PublishSingleFile>
+    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
+    <SatelliteResourceLanguages>ko;en</SatelliteResourceLanguages>
+    <AssemblyTitle>YouTube Music 설치</AssemblyTitle>
+    <Product>YouTube Music</Product>
+  </PropertyGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="payload.zip" LogicalName="payload.zip" Condition="Exists('payload.zip')" />
+    <Resource Include="Assets\app.png" />
+  </ItemGroup>
+</Project>
